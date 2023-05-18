@@ -2,43 +2,42 @@
 /**
  * cara templeton
  * 
- * 4/05
  * 
- * this class does queues, it adds nodes to the queue and removes them aswell.
+ * 12/05
+ * makes a queue
  */
 public class queue
 {
-    // instance variables - replace the example below with your own
-    private int x;
-    private Node front;
-    private Node back;
+
+    private Element front;
+    private Element back;
 
     /**
      * Constructor for objects of class queue
      */
     public queue()
     {
-        // initialise instance variables
+
     }
-    
-    public void enqueue(Node newNode){
+
+    public void enqueue(Element person){
         queueEmpty();
-        if (queueEmpty()){
-            front=newNode;
-            back=newNode;
+        if (queueEmpty()==true){
+            front=person;
+            back=person;
         } else {
-            back.addFollower(newNode);
-            back=newNode;
+            back.addFollower(person);
+            back=person;
         }
     }
-    
-    public Node dequeue(){
-        Node remember;
+
+    public Element dequeue(){
+        Element remember;
         queueEmpty();
-        if (queueEmpty()){
-            System.out.println("queue is already empty, cannot remove");
+        if (queueEmpty()==true){
+            System.out.println("queue is empty, can't remove");
             return null;
-        } else if (front==back){
+        } else if (front==back){ 
             remember=this.front;
             front=remember.getFollower();
             back=null;
@@ -51,7 +50,7 @@ public class queue
     }
 
     public boolean queueEmpty(){
-        if (front==null){
+        if (front==null) {
             return true;
         } else {
             return false;
