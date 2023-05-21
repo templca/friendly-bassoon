@@ -15,8 +15,7 @@ public class Network
      */
     public Network()
     {
-
-        
+        Node NodeA = new Node("A");
 
     }
 }
