@@ -32,4 +32,13 @@ public class Link
     public void addWeight(int weight){
         this.weight=weight;
     }
+    
+    public int getWeight(){
+        return weight;
+    }
+    
+    public String showLink(){
+        System.out.println(x.getName()+" links to "+y.getName()+". weight: "+weight);
+        return x+"links to"+y;
+    }
 }

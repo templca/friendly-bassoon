@@ -33,4 +33,8 @@ public class Node
         this.origin=origin;
     }
     
+    public String getName(){
+        return name;
+    }
+    
 }
