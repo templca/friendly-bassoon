@@ -12,6 +12,8 @@ public class Element
     private int x;
     private String name;
     private Element follower;
+    
+    private Link l;
 
     /**
      * Constructor for objects of class Element
@@ -31,5 +33,17 @@ public class Element
     
     public Element getFollower(){
         return this.follower;
+    }
+    
+    public void addLink(Link l){
+        this.l=l;
+    }
+    
+    public Link getLink(Link l){
+        return l;
+    }
+    
+    public int getCost(Link l){
+        return l.getWeight();
     }
 }

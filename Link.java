@@ -12,6 +12,7 @@ public class Link
     private Node x;
     private Node y;
     private int weight;
+    String name;
 
     /**
      * Constructor for objects of class Link
