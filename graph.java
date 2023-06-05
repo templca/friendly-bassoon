@@ -20,10 +20,13 @@ public class graph
     Link SB;
     Link AB;
     Link SS;
-    queue q;
-    int lin=3;
-    
+    linkqueue q;
+    int lin=4;
+    String nam;
+    Link[] links = new Link[lin];
+    Node[] nodes;
 
+    int i; //for loop counter
     /**
      * Constructor for objects of class Network
      */
@@ -36,7 +39,7 @@ public class graph
         SA = new Link();
         SB = new Link();
         AB = new Link();
-        q = new queue();
+        q = new linkqueue();
 
         SA.addLinkA(NodeS);
         SA.addLinkB(NodeA);
@@ -49,26 +52,25 @@ public class graph
         AB.addLinkA(NodeA);
         AB.addLinkB(NodeB);
         AB.addWeight(2);
-        
+
         SS.addLinkA(NodeS);
         SS.addLinkB(NodeS);
         SS.addWeight(0);
-        
-        Link[] links = new Link[lin];
-        SA = links[0];
-        SB = links[1];
-        AB = links[2];
+
+        links[0]=SS;
+        links[1]=SA;
+        links[2]=SB;
+        links[3]=AB;
+
     }
 
-    public String shortestPath(Node Start){
-        NodeS=Start;
-        int counter=lin;
-        while(counter>0){
-            if(
-            counter--;
+    public Link shortestPath(Node Start){
+        for (i=0;i<=(lin-1);i++){
+            q.enqueue(links[i]);
         }
-
-        return hello;
+        
+        
+        return q.dequeue();
     }
 
     public int getSize(){
@@ -82,26 +84,18 @@ public class graph
     public void make(int size){ 
         //this makes an arrya of nodes and then theorisucita,lly give ma,e to ehachj node int leter and then pritns the name oiut but it doesn't and it just give m esa a nbyll error
         this.size=size;
-        Node[] nodes = new Node[size];
-        for(int i=0;i>(size-1);i++){
+        nodes = new Node[size];
+        for( i=0;i>(size-1);i++){
             nodes[i]= new Node(intoString(n));
             System.out.println(nodes[i].getName());
             n++;
         }
-        
-        Link[] links = new Link[size];
-        
+
+
     }
 
     public String intoString(char letter){
         String n1=String.valueOf(letter);
         return n1;
-    }
-
-    public void newLink(Node first, Node second, int weight){
-        Link A = new Link();
-        A.addLinkA(first);
-        A.addLinkB(second);
-        A.addWeight(weight);
     }
 }

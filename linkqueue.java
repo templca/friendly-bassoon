@@ -4,41 +4,41 @@
  * 
  * 
  * 12/05
- * makes a queue
+ * makes a linkqueue
  */
-public class queue
+public class linkqueue
 {
 
-    private Element front;
-    private Element back;
+    private Link front;
+    private Link back;
 
     /**
-     * Constructor for objects of class queue
+     * Constructor for objects of class linkqueue
      */
-    public queue()
+    public linkqueue()
     {
 
     }
 
-    public void enqueue(Element person){
+    public void enqueue(Link nlink){
         queueEmpty();
         if (queueEmpty()==true){
-            front=person;
-            back=person;
-        } else if(person.getCost()<front.getCost()){
-            person.addFollower(front);
-            front=person;
+            front=nlink;
+            back=nlink;
+        } else if(nlink.getWeight()<front.getWeight()){
+            nlink.addFollower(front);
+            front=nlink;
         } else {
-            back.addFollower(person);
-            back=person;
+            back.addFollower(nlink);
+            back=nlink;
         }
     }
 
-    public Element dequeue(){
-        Element remember;
+    public Link dequeue(){
+        Link remember;
         queueEmpty();
         if (queueEmpty()==true){
-            System.out.println("queue is empty, can't remove");
+            System.out.println("linkqueue is empty, can't remove");
             return null;
         } else if (front==back){ 
             remember=this.front;
@@ -60,11 +60,11 @@ public class queue
         }
     }
     
-    public int getCostFront(){
-        return front.getCost();
+    public int getCostfront(){
+        return front.getWeight();
     }
     
-    public Element getFront(){
+    public Link getfront(){
         return front;
     }
 }

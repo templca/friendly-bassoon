@@ -27,6 +27,14 @@ public class Element
         this.name=name;
     }
     
+    public void addName(String name){
+        this.name=name;
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
     public void addFollower(Element follower){
         this.follower=follower;
     }
@@ -43,7 +51,11 @@ public class Element
         return l;
     }
     
-    public int getCost(Link l){
+    public String getLinkName(){
+        return l.getName();
+    }
+    
+    public int getCost(){
         return l.getWeight();
     }
 }

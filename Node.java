@@ -28,13 +28,13 @@ public class Node
     public void addName(String name){
         this.name=name;
     }
+
+    public String getName(){
+        return name;
+    }
     
     public void addOrigin(Node origin) {
         this.origin=origin;
-    }
-    
-    public String getName(){
-        return name;
     }
     
 }

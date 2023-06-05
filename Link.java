@@ -12,6 +12,7 @@ public class Link
     private Node x;
     private Node y;
     private int weight;
+    private Link follower;
     String name;
 
     /**
@@ -24,10 +25,16 @@ public class Link
     
     public void addLinkA(Node x){
         this.x=x;
+        name=x.getName();
     }
     
     public void addLinkB(Node y){
         this.y=y;
+        name=name+y.getName();
+    }
+    
+    public String getName(){
+        return name;
     }
     
     public void addWeight(int weight){
@@ -41,5 +48,13 @@ public class Link
     public String showLink(){
         System.out.println(x.getName()+" links to "+y.getName()+". weight: "+weight);
         return x+"links to"+y;
+    }
+    
+    public void addFollower(Link follower){
+        this.follower=follower;
+    }
+    
+    public Link getFollower(){
+        return this.follower;
     }
 }
