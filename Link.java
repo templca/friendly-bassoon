@@ -23,6 +23,10 @@ public class Link
         
     }
     
+    public Link(String name){
+        this.name=name;
+    }
+    
     public void addLinkA(Node x){
         this.x=x;
         name=x.getName();

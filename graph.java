@@ -6,8 +6,6 @@
  * 
  * netowork
  */
-
-
 public class graph
 {
     // instance variables - replace the example below with your own
@@ -26,7 +24,16 @@ public class graph
     int lin=4;
     String nam;
     Link[] links = new Link[lin];
+    Link[] l;
     Node[] nodes;
+    filereader read = new filereader();
+    int numberOfNodes;
+    int numberOfLinks;
+    int weight;
+    int num=1;
+    String nodeName;
+    int hh;
+    int b;
 
     int i; //for loop counter
     /**
@@ -65,6 +72,40 @@ public class graph
         links[3]=AB;
 
     }
+    
+    public void initialise(){
+        numberOfNodes=Integer.parseInt(read.getData(0,0));
+        numberOfLinks=(read.getLines()-1);
+        l = new Link[numberOfLinks];
+        nodes = new Node[numberOfNodes];
+        for (i=0;i<=(numberOfNodes-1);i++){
+            nodes[i]=new Node(intoString(n));
+            n++;
+        }
+        
+        for (i=0;i<=(numberOfLinks-1);i++){
+            l[i]=new Link();
+        }
+        
+        for (i=0;i<=(numberOfLinks-1);i++){
+            weight=Integer.parseInt(read.getData(2,num));
+            l[i].addWeight(weight);
+            
+            nodeName=read.getData(0,num);
+            for(int j=0;j<=(numberOfLinks-1);j++){
+                l[i].addLinkA(getNode(num));
+            }
+            
+            num++;
+        }
+        
+        
+        
+    }
+    
+    public int intoInt(){
+        return Integer.parseInt(read.getData(2, 1));
+    }
 
     public Link shortestPath(Node Start){
         for (i=0;i<=(lin-1);i++){
@@ -83,21 +124,16 @@ public class graph
         this.size=size;
     }
 
-    public void make(int size){ 
-        //this makes an arrya of nodes and then theorisucita,lly give ma,e to ehachj node int leter and then pritns the name oiut but it doesn't and it just give m esa a nbyll error
-        this.size=size;
-        nodes = new Node[size];
-        for( i=0;i>(size-1);i++){
-            nodes[i]= new Node(intoString(n));
-            System.out.println(nodes[i].getName());
-            n++;
-        }
-
-
-    }
-
     public String intoString(char letter){
         String n1=String.valueOf(letter);
         return n1;
     }
+    
+    public Node getNode(int hh){
+        if(nodes[hh].getName()==read.getData(0,hh)){
+            b=hh;
+        }
+        return nodes[b];
+    }
+    
 }

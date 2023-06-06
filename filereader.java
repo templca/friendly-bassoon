@@ -19,6 +19,7 @@ public class filereader
     File thefile = new File(FILENAME);
     String CSVlines[] = new String[MAXLINES];
     String AllLinesAllElements[][]=new String[MAXLINES][VALUESPERLINE];
+    int lineCount=0;
 
     /**
      * Constructor for objects of class filereader
@@ -26,7 +27,6 @@ public class filereader
     public filereader()
     {
         // initialise instance variables
-        int lineCount=0;
 
         try {
             Scanner reader = new Scanner(thefile);
@@ -42,14 +42,16 @@ public class filereader
 
                 for(int j=0;j<values.length;j++){
                     AllLinesAllElements[i][j]=values[j];
-                    System.out.print(values[j]+"****");
                 }
-                System.out.println("");
             } 
         }catch (IOException e) {System.out.println(e);}
     }
+    
+    public int getLines(){
+        return (lineCount);
+    }
 
-    public String getData(int maxlines, int valuesperline){
-        return AllLinesAllElements[maxlines][valuesperline];
+    public String getData(int column, int row){
+        return AllLinesAllElements[row][column];
     }
 }

@@ -4,7 +4,7 @@
  * 
  * 
  * 12/05
- * makes a queue that uses links instead of elements
+ * makes a linkqueue
  */
 public class linkqueue
 {
