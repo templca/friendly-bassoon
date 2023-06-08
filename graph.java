@@ -36,6 +36,8 @@ public class graph
     int b;
 
     int i; //for loop counter
+    int x=0;
+    boolean yes;
     /**
      * Constructor for objects of class Network
      */
@@ -72,7 +74,7 @@ public class graph
         links[3]=AB;
 
     }
-    
+
     public void initialise(){
         numberOfNodes=Integer.parseInt(read.getData(0,0));
         numberOfLinks=(read.getLines()-1);
@@ -82,34 +84,60 @@ public class graph
             nodes[i]=new Node(intoString(n));
             n++;
         }
-        
+
         for (i=0;i<=(numberOfLinks-1);i++){
             l[i]=new Link();
         }
-        
+
         for (i=0;i<=(numberOfLinks-1);i++){
             weight=Integer.parseInt(read.getData(2,num));
             l[i].addWeight(weight);
-            
+
             nodeName=read.getData(0,num);
-            
+            for (int j=0;j<=(numberOfNodes-1);j++){
+                l[i].addLinkA(getNode(nodeName));
+
+            }
+            x=0;
+            String nodeName1=read.getData(1,num);
+            for (int j=0;j<=(numberOfNodes-1);j++){
+                l[i].addLinkB(getNode(nodeName1));
+
+            }
+
             num++;
         }
-        
-        
-        
+
     }
-    
+
+    public Node getNode(String n){
+        if (n.equals(nodes[x].getName())){
+            return nodes[x];
+        } else {
+            if (x>=(numberOfNodes-1)){
+                return null;
+            } 
+            x++;
+            return getNode(n);
+        }
+
+    }
+
+    public boolean same(int n){
+        if(nodeName==nodes[n].getName()){
+            return true;
+        } else return false;
+    }
+
     public int intoInt(){
         return Integer.parseInt(read.getData(2, 1));
     }
 
-    public Link shortestPath(Node Start){
+    public Link shortestPath(){
         for (i=0;i<=(lin-1);i++){
-            q.enqueue(links[i]);
+            q.enqueue(l[i]);
         }
-        
-        
+
         return q.dequeue();
     }
 
@@ -125,5 +153,5 @@ public class graph
         String n1=String.valueOf(letter);
         return n1;
     }
-    
+
 }
