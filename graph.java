@@ -36,8 +36,6 @@ public class graph
     int b;
 
     int i; //for loop counter
-    int x=0;
-    boolean yes;
     /**
      * Constructor for objects of class Network
      */
@@ -96,13 +94,10 @@ public class graph
             nodeName=read.getData(0,num);
             for (int j=0;j<=(numberOfNodes-1);j++){
                 l[i].addLinkA(getNode(nodeName));
-
             }
-            x=0;
             String nodeName1=read.getData(1,num);
             for (int j=0;j<=(numberOfNodes-1);j++){
                 l[i].addLinkB(getNode(nodeName1));
-
             }
 
             num++;
@@ -111,42 +106,27 @@ public class graph
     }
 
     public Node getNode(String n){
-        if (n.equals(nodes[x].getName())){
-            return nodes[x];
-        } else {
-            if (x>=(numberOfNodes-1)){
+        boolean yes=true;
+        int x=0;
+        while(yes){
+            if (n.equals(nodes[x].getName())){
+                yes=false;
+            } else if(x>=(numberOfNodes-1)){
+                yes=false;
                 return null;
-            } 
-            x++;
-            return getNode(n);
+            } else {
+                x++;
+            }
         }
-
-    }
-
-    public boolean same(int n){
-        if(nodeName==nodes[n].getName()){
-            return true;
-        } else return false;
-    }
-
-    public int intoInt(){
-        return Integer.parseInt(read.getData(2, 1));
+        return nodes[x];
     }
 
     public Link shortestPath(){
-        for (i=0;i<=(lin-1);i++){
+        for (i=0;i<=(numberOfLinks-1);i++){
             q.enqueue(l[i]);
         }
 
         return q.dequeue();
-    }
-
-    public int getSize(){
-        return size;
-    }
-
-    public void addSize(int size){
-        this.size=size;
     }
 
     public String intoString(char letter){
