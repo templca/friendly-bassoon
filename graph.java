@@ -123,10 +123,28 @@ public class graph
 
     public Link shortestPath(){
         for (i=0;i<=(numberOfLinks-1);i++){
+            
             q.enqueue(l[i]);
         }
 
         return q.dequeue();
+    }
+    
+    public Link sWeight(){
+        boolean running=true;
+        int x=0;
+        while(running){
+            if(l[x].getWeight()<l[x++].getWeight()){
+                running=false;
+            } else if(x++>=(numberOfLinks-1)){
+                return 
+            }
+            }
+            else {
+                
+            }
+        }
+        return l[x];
     }
 
     public String intoString(char letter){

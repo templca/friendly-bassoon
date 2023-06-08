@@ -4,7 +4,7 @@
  * 
  * 
  * 12/05
- * makes a linkqueue
+ * makes a queue that uses links instead of elements
  */
 public class linkqueue
 {
@@ -25,12 +25,21 @@ public class linkqueue
         if (queueEmpty()==true){
             front=nlink;
             back=nlink;
-        } else if(nlink.getWeight()<front.getWeight()){
-            nlink.addFollower(front);
-            front=nlink;
         } else {
             back.addFollower(nlink);
             back=nlink;
+        }
+    }
+    
+    public Link findFollower(Link y, Link n){
+        Link x;
+        x=y.getFollower();
+        if(n.getWeight()<x.getWeight()){
+            return x;
+        } else if (back==x){
+            return null;
+        } else {
+            return findFollower(x,n);
         }
     }
 
