@@ -92,9 +92,6 @@ public class graph
             l[i].addWeight(weight);
             
             nodeName=read.getData(0,num);
-            for(int j=0;j<=(numberOfLinks-1);j++){
-                l[i].addLinkA(getNode(num));
-            }
             
             num++;
         }
@@ -127,13 +124,6 @@ public class graph
     public String intoString(char letter){
         String n1=String.valueOf(letter);
         return n1;
-    }
-    
-    public Node getNode(int hh){
-        if(nodes[hh].getName()==read.getData(0,hh)){
-            b=hh;
-        }
-        return nodes[b];
     }
     
 }
