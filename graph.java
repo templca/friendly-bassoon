@@ -6,6 +6,8 @@
  * 
  * netowork
  */
+
+import java.util.Scanner;
 public class graph
 {
     // instance variables - replace the example below with your own
@@ -102,6 +104,7 @@ public class graph
 
             num++;
         }
+        sort();
 
     }
 
@@ -121,30 +124,31 @@ public class graph
         return nodes[x];
     }
 
-    public Link shortestPath(){
+    public Link shortestPath(Node Start, Node End){
         for (i=0;i<=(numberOfLinks-1);i++){
-            
             q.enqueue(l[i]);
         }
 
         return q.dequeue();
     }
     
-    public Link sWeight(){
-        boolean running=true;
-        int x=0;
-        while(running){
-            if(l[x].getWeight()<l[x++].getWeight()){
-                running=false;
-            } else if(x++>=(numberOfLinks-1)){
-                return 
-            }
-            }
-            else {
-                
+    public Link find(String n){
+        for (int i=0;i<=(numberOfLinks-1);i++){
+            if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
             }
         }
-        return l[x];
+    }
+
+    public void sort(){
+        for (int i=0;i<=(numberOfLinks-1);i++){
+            int j=i;
+            int a=l[i].getWeight();
+            while ((j>0 )&& (l[j-1].getWeight()>a)){
+                l[j].addWeight(l[j-1].getWeight());
+                j--;
+            }
+            l[j].addWeight(a);
+        }
     }
 
     public String intoString(char letter){
