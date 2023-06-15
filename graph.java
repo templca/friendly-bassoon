@@ -27,6 +27,7 @@ public class graph
     String nam;
     Link[] links = new Link[lin];
     Link[] l;
+    Link[] yes;
     Node[] nodes;
     filereader read = new filereader();
     int numberOfNodes;
@@ -104,7 +105,6 @@ public class graph
 
             num++;
         }
-        sort();
 
     }
 
@@ -125,6 +125,7 @@ public class graph
     }
 
     public Link shortestPath(Node Start, Node End){
+        sort();
         for (i=0;i<=(numberOfLinks-1);i++){
             q.enqueue(l[i]);
         }
@@ -132,10 +133,14 @@ public class graph
         return q.dequeue();
     }
     
-    public Link find(String n){
-        for (int i=0;i<=(numberOfLinks-1);i++){
+    public void find(String n){
+        yes = new Link[numberOfLinks];
+        int num=0;
+        for (i=0;i<=(numberOfLinks-1);i++){
             if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
-            }
+                    yes[num]=l[i];
+                    num++;
+            } 
         }
     }
 
