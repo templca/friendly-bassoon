@@ -12,22 +12,15 @@ public class graph
 {
     // instance variables - replace the example below with your own
 
-    private int size;
+    
     private char n='a';
-    String hello;
-    Node NodeS;
-    Node NodeA;
-    Node NodeB;
-    Link SA;
-    Link SB;
-    Link AB;
-    Link SS;
-    linkqueue q;
+    
+    Queue q;
     int lin=4;
     String nam;
-    Link[] links = new Link[lin];
     Link[] l;
     Link[] yes;
+    Link[] finished;
     Node[] nodes;
     filereader read = new filereader();
     int numberOfNodes;
@@ -35,8 +28,7 @@ public class graph
     int weight;
     int num=1;
     String nodeName;
-    int hh;
-    int b;
+    Node Starting;
 
     int i; //for loop counter
     /**
@@ -44,35 +36,8 @@ public class graph
      */
     public graph()
     {
-        NodeS = new Node("S");
-        NodeA = new Node("A");
-        NodeB = new Node("B");
-        SS = new Link();
-        SA = new Link();
-        SB = new Link();
-        AB = new Link();
-        q = new linkqueue();
-
-        SA.addLinkA(NodeS);
-        SA.addLinkB(NodeA);
-        SA.addWeight(2);
-
-        SB.addLinkA(NodeS);
-        SB.addLinkB(NodeB);
-        SB.addWeight(5);
-
-        AB.addLinkA(NodeA);
-        AB.addLinkB(NodeB);
-        AB.addWeight(2);
-
-        SS.addLinkA(NodeS);
-        SS.addLinkB(NodeS);
-        SS.addWeight(0);
-
-        links[0]=SS;
-        links[1]=SA;
-        links[2]=SB;
-        links[3]=AB;
+        
+        q = new Queue();
 
     }
 
@@ -124,35 +89,27 @@ public class graph
         return nodes[x];
     }
 
-    public Link shortestPath(Node Start, Node End){
-        sort();
+    public void shortestPath(String Start){
+        finished = new Link[numberOfLinks];
+        int num=0;
+        Starting=getNode(Start);
         for (i=0;i<=(numberOfLinks-1);i++){
-            q.enqueue(l[i]);
+            q.doEnqueue(l[i]);
         }
-
-        return q.dequeue();
     }
     
     public void find(String n){
-        yes = new Link[numberOfLinks];
         int num=0;
         for (i=0;i<=(numberOfLinks-1);i++){
             if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
-                    yes[num]=l[i];
                     num++;
             } 
         }
-    }
-
-    public void sort(){
-        for (int i=0;i<=(numberOfLinks-1);i++){
-            int j=i;
-            int a=l[i].getWeight();
-            while ((j>0 )&& (l[j-1].getWeight()>a)){
-                l[j].addWeight(l[j-1].getWeight());
-                j--;
-            }
-            l[j].addWeight(a);
+        yes = new Link[num];
+        for (i=0;i<=(num-1);i++){
+            if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
+                    yes[(num-1)]=l[i];
+            } 
         }
     }
 
