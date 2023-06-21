@@ -12,9 +12,7 @@ public class graph
 {
     // instance variables - replace the example below with your own
 
-    
     private char n='a';
-    
     Queue q;
     int lin=4;
     String nam;
@@ -29,6 +27,8 @@ public class graph
     int num=1;
     String nodeName;
     Node Starting;
+    boolean loopy=true;
+    Link dummy;
 
     int i; //for loop counter
     /**
@@ -36,7 +36,7 @@ public class graph
      */
     public graph()
     {
-        
+
         q = new Queue();
 
     }
@@ -91,24 +91,34 @@ public class graph
 
     public void shortestPath(String Start){
         finished = new Link[numberOfLinks];
-        int num=0;
-        Starting=getNode(Start);
-        for (i=0;i<=(numberOfLinks-1);i++){
-            q.doEnqueue(l[i]);
+        finished[0].addLinkA(getNode(Start));
+        finished[0].addLinkB(getNode(Start));
+        finished[0].addWeight(0);
+        int num=1;
+
+        find(Start);
+        while (loopy){
+            for (int j=0;j<=(numberOfLinks-1);j++){
+                q.doEnqueue(yes[j]);
+            } 
+            dummy=q.dequeue();
+            finished[i]=dummy;
+            dummy.getOther(Start);
+            num++;
         }
-    }
-    
+    } 
+
     public void find(String n){
         int num=0;
         for (i=0;i<=(numberOfLinks-1);i++){
             if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
-                    num++;
+                num++;
             } 
         }
         yes = new Link[num];
         for (i=0;i<=(num-1);i++){
             if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
-                    yes[(num-1)]=l[i];
+                yes[i]=l[i];
             } 
         }
     }
