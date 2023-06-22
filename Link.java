@@ -23,6 +23,10 @@ public class Link
         
     }
     
+    public Link(String name){
+        this.name=name;
+    }
+    
     public void addLinkA(Node x){
         this.x=x;
         name=x.getName();
@@ -41,6 +45,10 @@ public class Link
         this.weight=weight;
     }
     
+    public void addOnWeight(int on){
+        weight=weight+on;
+    }
+    
     public int getWeight(){
         return weight;
     }
@@ -56,5 +64,22 @@ public class Link
     
     public Link getFollower(){
         return this.follower;
+    }
+    
+    public String getNodeA(){
+        return x.getName();
+    }
+    
+    public String getNodeB(){
+        return y.getName();
+    }
+    
+    public String getOther(String c){
+        if(c.equals(getNodeA())){
+            return getNodeB();
+        } else if(c.equals(getNodeB())){
+            return getNodeA();
+        }
+        return null;
     }
 }
