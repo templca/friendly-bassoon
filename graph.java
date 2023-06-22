@@ -18,6 +18,7 @@ public class graph
     String nam;
     Link[] l;
     Link[] yes;
+    Link[] sameNode;
     Link[] finished;
     Node[] nodes;
     filereader read = new filereader();
@@ -31,7 +32,7 @@ public class graph
     Link dummy;
     int baseWeight;
     int counter;
-    String test;
+    String next;
 
     int i; //for loop counter
     /**
@@ -92,8 +93,7 @@ public class graph
     }
     
     public void bruh(String Start){
-        test=Start;
-        System.out.println(test);
+        
         finished = new Link[2];
         finished[0]=new Link();
         finished[0].addLinkA(getNode(Start));
@@ -101,11 +101,13 @@ public class graph
         finished[0].addWeight(0);
         int num=1;
         int baseWeight=0;
+        System.out.println("length of finsihed: " +finished.length);
+        extend(6);
+        System.out.println("length of finished: " +finished.length);
     }
 
     public void shortestPath(String Start){
-        test=Start;
-        System.out.println(test);
+        initialise();
         finished = new Link[2];
         finished[0]=new Link();
         finished[0].addLinkA(getNode(Start));
@@ -113,28 +115,37 @@ public class graph
         finished[0].addWeight(0);
         int num=1;
         int baseWeight=0;
+        get(Start);
 
         while (loopy){
-            get(Start);
-            for (int j=0;j<=(l.length-1);j++){
-                l[j].addOnWeight(baseWeight);
-                q.doEnqueue(l[j]);
+            System.out.println("num before: "+num);
+            if(num>1){
+                get(next);
+            }
+            for (int j=0;j<=(sameNode.length-1);j++){
+                sameNode[j].addOnWeight(baseWeight);
+                q.doEnqueue(sameNode[j]);
+                System.out.println("enqueueing: "+sameNode[j].getName());
             } 
             dummy=q.dequeue();
+            extend(1);
             finished[num]=dummy;
             baseWeight=baseWeight+dummy.getWeight();
-            Start=dummy.getOther(Start);
-            test=Start;
-            System.out.println(test);
+            System.out.println("dummy before: "+dummy.getName());
+            System.out.println("next before: "+next);
+            next=dummy.getOther(Start);
+            System.out.println("next after: "+next);
             num++;
+            System.out.println("num after: "+num);
 
             counter=0;
-            for (int j=0;j<=(numberOfNodes-1);j++){
+            for (int j=0;j<=(nodes.length-1);j++){
                 if (check(nodes[j].getName())){
                     counter++;
                 }                
             } 
-            if(counter==numberOfNodes){
+            System.out.println(counter);
+            if(counter==finished.length){
                 loopy=false;
             }
         }
@@ -143,13 +154,13 @@ public class graph
         }
     } 
     
-    public void store(int base){
+    public void extend(int base){
         Link[] stored = new Link[finished.length];
         for(int i=0;i<=(finished.length-1);i++){
             stored[i]=finished[i];
         }
         int old= finished.length;
-        finished = new Link[finished.length+base];
+        finished = new Link[(finished.length-1)+base];
         for(int i=0;i<=(old-1);i++){
             finished[i]=stored[i];
             stored[i]=null;
@@ -163,7 +174,7 @@ public class graph
             if(s.equals(finished[x].getNodeA())||s.equals(finished[x].getNodeB())){
                 yes=false;
                 return true;
-            } else if(x>=(numberOfNodes-1)){
+            } else if(x>=(finished.length-1)){
                 yes=false;
                 return false;
             } else if(finished[x]==null){
@@ -177,7 +188,24 @@ public class graph
     }
 
     public void get(String n){
-        
+        int num=0;
+        for(int i=0;i<=(numberOfLinks-1);i++){
+            if(n.equals(l[i].getNodeA())||n.equals(l[i].getNodeB())){
+                num++;
+            }
+        }
+        if(sameNode==null){
+        sameNode = new Link[num];
+    } else {
+        sameNode = new Link[sameNode.length+num];
+    }
+        int count=0;
+        for(int i=0;i<=(sameNode.length-1);i++){
+            if(n.equals(l[i].getNodeA())||n.equals(l[i].getNodeB())){
+                sameNode[count]=l[i];
+                count++;
+            }
+        }
 
     }
 
