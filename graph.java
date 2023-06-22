@@ -29,6 +29,8 @@ public class graph
     Node Starting;
     boolean loopy=true;
     Link dummy;
+    int baseWeight;
+    int counter;
 
     int i; //for loop counter
     /**
@@ -91,24 +93,61 @@ public class graph
 
     public void shortestPath(String Start){
         finished = new Link[numberOfLinks];
+        for (i=0;i<=(finished.length-1);i++){
+            l[i]=new Link();
+        }
         finished[0].addLinkA(getNode(Start));
         finished[0].addLinkB(getNode(Start));
         finished[0].addWeight(0);
         int num=1;
+        int baseWeight=0;
 
-        find(Start);
+        
         while (loopy){
-            for (int j=0;j<=(numberOfLinks-1);j++){
+            get(Start);
+            for (int j=0;j<=(yes.length-1);j++){
+                yes[j].addOnWeight(baseWeight);
                 q.doEnqueue(yes[j]);
             } 
             dummy=q.dequeue();
             finished[i]=dummy;
-            dummy.getOther(Start);
+            baseWeight=dummy.getWeight();
+            Start=dummy.getOther(Start);
             num++;
+            
+            counter=0;
+            for (int j=0;j<=(numberOfNodes-1);j++){
+                if (check(nodes[j].getName())){
+                    counter++;
+                }                
+            } 
+            if(counter==numberOfNodes){
+                loopy=false;
+            }
+        }
+        for (int i=0;i<=(finished.length-1);i++){
+            System.out.println(finished[i].getNodeA()+" links to "+finished[i].getNodeB());
         }
     } 
+    
+    public boolean check(String s){
+        boolean yes=true;
+        int x=0;
+        while(yes){
+            if(s.equals(finished[x].getNodeA())||s.equals(finished[x].getNodeB())){
+                yes=false;
+                return true;
+            } else if(x>=(numberOfNodes-1)){
+                yes=false;
+                return false;
+            } else {
+                x++;
+            }
+        }
+        return false; 
+    }
 
-    public void find(String n){
+    public void get(String n){
         int num=0;
         for (i=0;i<=(numberOfLinks-1);i++){
             if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
@@ -126,6 +165,11 @@ public class graph
     public String intoString(char letter){
         String n1=String.valueOf(letter);
         return n1;
+    }
+    
+    public char intoChar(String word){
+        char c;
+        return c=word.charAt(0);
     }
 
 }
