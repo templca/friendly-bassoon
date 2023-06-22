@@ -31,6 +31,7 @@ public class graph
     Link dummy;
     int baseWeight;
     int counter;
+    String test;
 
     int i; //for loop counter
     /**
@@ -38,7 +39,6 @@ public class graph
      */
     public graph()
     {
-
         q = new Queue();
 
     }
@@ -90,31 +90,44 @@ public class graph
         }
         return nodes[x];
     }
+    
+    public void bruh(String Start){
+        test=Start;
+        System.out.println(test);
+        finished = new Link[2];
+        finished[0]=new Link();
+        finished[0].addLinkA(getNode(Start));
+        finished[0].addLinkB(getNode(Start));
+        finished[0].addWeight(0);
+        int num=1;
+        int baseWeight=0;
+    }
 
     public void shortestPath(String Start){
-        finished = new Link[numberOfLinks];
-        for (i=0;i<=(finished.length-1);i++){
-            l[i]=new Link();
-        }
+        test=Start;
+        System.out.println(test);
+        finished = new Link[2];
+        finished[0]=new Link();
         finished[0].addLinkA(getNode(Start));
         finished[0].addLinkB(getNode(Start));
         finished[0].addWeight(0);
         int num=1;
         int baseWeight=0;
 
-        
         while (loopy){
             get(Start);
-            for (int j=0;j<=(yes.length-1);j++){
-                yes[j].addOnWeight(baseWeight);
-                q.doEnqueue(yes[j]);
+            for (int j=0;j<=(l.length-1);j++){
+                l[j].addOnWeight(baseWeight);
+                q.doEnqueue(l[j]);
             } 
             dummy=q.dequeue();
-            finished[i]=dummy;
-            baseWeight=dummy.getWeight();
+            finished[num]=dummy;
+            baseWeight=baseWeight+dummy.getWeight();
             Start=dummy.getOther(Start);
+            test=Start;
+            System.out.println(test);
             num++;
-            
+
             counter=0;
             for (int j=0;j<=(numberOfNodes-1);j++){
                 if (check(nodes[j].getName())){
@@ -130,6 +143,19 @@ public class graph
         }
     } 
     
+    public void store(int base){
+        Link[] stored = new Link[finished.length];
+        for(int i=0;i<=(finished.length-1);i++){
+            stored[i]=finished[i];
+        }
+        int old= finished.length;
+        finished = new Link[finished.length+base];
+        for(int i=0;i<=(old-1);i++){
+            finished[i]=stored[i];
+            stored[i]=null;
+        }
+    }
+
     public boolean check(String s){
         boolean yes=true;
         int x=0;
@@ -140,6 +166,9 @@ public class graph
             } else if(x>=(numberOfNodes-1)){
                 yes=false;
                 return false;
+            } else if(finished[x]==null){
+                yes=false;
+                return false;
             } else {
                 x++;
             }
@@ -148,25 +177,15 @@ public class graph
     }
 
     public void get(String n){
-        int num=0;
-        for (i=0;i<=(numberOfLinks-1);i++){
-            if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
-                num++;
-            } 
-        }
-        yes = new Link[num];
-        for (i=0;i<=(num-1);i++){
-            if (n.equals(l[i].getNodeA()) || n.equals(l[i].getNodeB())){
-                yes[i]=l[i];
-            } 
-        }
+        
+
     }
 
     public String intoString(char letter){
         String n1=String.valueOf(letter);
         return n1;
     }
-    
+
     public char intoChar(String word){
         char c;
         return c=word.charAt(0);
