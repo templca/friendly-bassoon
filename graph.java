@@ -12,15 +12,8 @@ import java.util.ArrayList;
 public class graph
 {
     // instance variables - replace the example below with your own
-
-    private char n='a';
     Queue q;
-    int lin=4;
-    String nam;
     Link[] l;
-    Link[] yes;
-    Link[] sameNode;
-    Link[] finished;
     Node[] nodes;
     filereader read = new filereader();
     int numberOfNodes;
@@ -28,7 +21,6 @@ public class graph
     int weight;
     int num=1;
     String nodeName;
-    Node Starting;
     boolean loopy=true;
     Link dummy;
     int baseWeight;
@@ -36,8 +28,7 @@ public class graph
     String next;
     ArrayList<Link> done = new ArrayList<Link>();
     ArrayList<Link> todo = new ArrayList<Link>();
-
-    int i; //for loop counter
+    
     /**
      * Constructor for objects of class Network
      */
@@ -47,21 +38,25 @@ public class graph
 
     }
 
+    //reads from file
     public void initialise(){
         numberOfNodes=Integer.parseInt(read.getData(0,0));
-        numberOfLinks=(read.getLines()-1);
+        numberOfLinks=(read.getLines()-(numberOfNodes+1));
         l = new Link[numberOfLinks];
         nodes = new Node[numberOfNodes];
-        for (i=0;i<=(numberOfNodes-1);i++){
-            nodes[i]=new Node(intoString(n));
-            n++;
+        int count=1;
+        for (int i=0;i<=(numberOfNodes-1);i++){
+            
+            nodes[i]=new Node(read.getData(0,count));
+            count++;
         }
 
-        for (i=0;i<=(numberOfLinks-1);i++){
+        for (int i=0;i<=(numberOfLinks-1);i++){
             l[i]=new Link();
         }
+        num=1+numberOfNodes;
 
-        for (i=0;i<=(numberOfLinks-1);i++){
+        for (int i=0;i<=(numberOfLinks-1);i++){
             weight=Integer.parseInt(read.getData(2,num));
             l[i].addWeight(weight);
 
@@ -79,6 +74,8 @@ public class graph
 
     }
 
+    /* this method takes in a node name and returns the shortest path
+       to each other node */
     public Node getNode(String n){
         boolean yes=true;
         int x=0;
@@ -95,10 +92,7 @@ public class graph
         return nodes[x];
     }
 
-    public String findFollower(int nnam){
-        return todo.get(nnam).getFollowerName();
-    }
-
+    /*finds the shortest path to each node from the one you pick*/
     public void shortestPath(String Start){
         initialise(); //reads from file
         done.add(new Link()); 
@@ -127,7 +121,9 @@ public class graph
                 }
             } 
             todo.clear(); 
-            //Link dummy=q.dequeue();
+            /*checks if the front of the queue is already in the done 
+               arraylist. if it is then adds it to done, if it isn't
+               it keeps looking at the followers until there's one not in done*/
             if(!checkLink(done,q.getFront().getName())){
                 done.add(q.getFront());
                 baseWeight=q.getFront().getWeight();
@@ -137,18 +133,10 @@ public class graph
             } else {
                 Link dummy=q.getFront();
                 done.add(findNextFollower(dummy));
+                baseWeight=done.get(num).getWeight();
                 System.out.println("//(dequeue) adding to done: "+done.get(num).getName());
             }
             System.out.println("baseweight now: "+baseWeight);
-
-            //checks if link is al
-            /*if(!checkLink(done,dummy.getName())){
-            done.add(dummy);
-            System.out.println("(dequeue) adding to done: "+done.get(num-1).getName());
-            } else {
-            System.out.println("(dequeue) already added.");
-            }
-             */
             System.out.println("next before: "+Start);
             Start=done.get(done.size()-1).getOther(Start);
             System.out.println("next after: "+Start);
@@ -159,6 +147,8 @@ public class graph
                 System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
             }
 
+            /* looks through the done array and checks if all the nodes are
+               there. if they are then the loop stops.*/
             counter=0;
             for (int j=0;j<=(nodes.length-1);j++){
                 if (checkNode(done, nodes[j].getName())){
@@ -172,19 +162,12 @@ public class graph
             }
         }
         for (int i=0;i<=(done.size()-1);i++){
-            System.out.println(done.get(i).getNodeA()+" links to "+done.get(i).getNodeB());
-        }
+                System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
+            }
     }
 
-    public boolean andOr(boolean first, boolean second){
-        if(first && second){
-            return true;
-        } else if (first || second){
-            return true;
-        }
-        return false;
-    }
-
+    /*this method checks if a link is in done, 
+    if its not then it looks at its follower */
     public Link findNextFollower(Link lin){
         if(!checkLink(done,lin.getFollower().getName())){
             return lin.getFollower();
@@ -193,15 +176,11 @@ public class graph
         }
     }
 
-    public void test(){
-        for (int i=0;i<=4;i++){
-            q.doEnqueue(l[i]);
-        }
-    }
-
+    /* this method returns true if there is a link with the inputted 
+     * name in the queue */
     public boolean checkQueue(String s){
         Link a =q.getFront();
-        for(i=0;i<=(q.len()-1);i++){
+        for(int i=0;i<=(q.len()-1);i++){
             if(s.equals(a.getName())){
                 return true;
             } else {
@@ -211,8 +190,10 @@ public class graph
         return false;
     }
 
+    /*this method returns true if there's a link with the inputted 
+     * name is in the selected array*/
     public boolean checkLink(ArrayList<Link> a, String s){
-        for(i=0;i<=(a.size()-1);i++){
+        for(int i=0;i<=(a.size()-1);i++){
             if(s.equals(a.get(i).getName())){
                 return true;
             } else if (a.get(i)==null){
@@ -222,6 +203,8 @@ public class graph
         return false;
     }
 
+       /*this method returns true if there's a node with the inputted 
+     * name is in the selected array*/
     public boolean checkNode(ArrayList<Link> aar, String s){
         boolean yes=true;
         int x=0;
@@ -242,6 +225,8 @@ public class graph
         return false; 
     }
 
+    /*this method adds all the links with the right name 
+     * to an arraylist */
     public void getLinks(String n){
         for(int i=0;i<=(numberOfLinks-1);i++){
             if(n.equals(l[i].getNodeA())||n.equals(l[i].getNodeB())){
@@ -258,16 +243,6 @@ public class graph
             }
         }
 
-    }
-
-    public String intoString(char letter){
-        String n1=String.valueOf(letter);
-        return n1;
-    }
-
-    public char intoChar(String word){
-        char c;
-        return c=word.charAt(0);
     }
 
 }

@@ -12,68 +12,78 @@ public class Link
     private Node x;
     private Node y;
     private int weight;
+    private int weightAdded;
     private Link follower;
     String name;
+    int runB=0;
 
     /**
      * Constructor for objects of class Link
      */
     public Link()
     {
-        
+
     }
-    
+
     public Link(String name){
         this.name=name;
     }
-    
+
     public void addLinkA(Node x){
         this.x=x;
         name=x.getName();
     }
-    
+
     public void addLinkB(Node y){
-        this.y=y;
-        name=name+y.getName();
+        if(runB==0){
+            this.y=y;
+            name=name+y.getName(); 
+        } else {
+            this.y=y;
+        }
     }
-    
+
     public String getName(){
         return name;
     }
-    
+
     public void addWeight(int weight){
         this.weight=weight;
     }
-    
+
     public void addOnWeight(int on){
-        weight=weight+on;
+        weightAdded=on;
     }
-    
+
     public int getWeight(){
-        return weight;
+        return weight+weightAdded;
     }
-    
+
     public String showLink(){
         System.out.println(x.getName()+" links to "+y.getName()+". weight: "+weight);
         return x+"links to"+y;
     }
-    
+
     public void addFollower(Link follower){
         this.follower=follower;
     }
-    
+
+    public String getFollowerName(){
+        return this.follower.getName();
+    }
+
     public Link getFollower(){
         return this.follower;
     }
-    
+
     public String getNodeA(){
         return x.getName();
     }
-    
+
     public String getNodeB(){
         return y.getName();
     }
-    
+
     public String getOther(String c){
         if(c.equals(getNodeA())){
             return getNodeB();

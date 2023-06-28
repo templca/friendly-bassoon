@@ -51,7 +51,7 @@ public class Queue<O>
         if (after.getFollower() == null){ // end of queue
             after.addFollower(toInsert);
             this.end=toInsert;
-        } // insert at end of queuue 
+        } // insert at end of queue 
         else  // check to see if we insert directly between after and its follower
         if (after.getFollower().getWeight() > toInsert.getWeight()){ // we need to insert it   
             toInsert.addFollower(after.getFollower());
@@ -99,6 +99,9 @@ public class Queue<O>
         if (current==null) return 0;
         else return lenR(current.getFollower())+1;
     }
+    
+    public Link getFront(){
+        return front;
+    }
 
 }
-
