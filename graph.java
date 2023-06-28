@@ -95,71 +95,144 @@ public class graph
         return nodes[x];
     }
 
-    public void bruh(String Start){
-
-        done.add(new Link());
-        int num=1;
-        int baseWeight=0;
-        //System.out.println("length of finsihed: " +done.size);
-        //System.out.println("length of finished: " +done.length);
+    public String findFollower(int nnam){
+        return todo.get(nnam).getFollowerName();
     }
 
     public void shortestPath(String Start){
-        initialise();
-        done.add(new Link());
+        initialise(); //reads from file
+        done.add(new Link()); 
         done.get(0).addWeight(0);
-        done.get(0).addLinkA(nodes[0]);
-        done.get(0).addLinkB(nodes[0]);
+        done.get(0).addLinkA(getNode(Start));
+        done.get(0).addLinkB(getNode(Start));
         int num=1;
         int baseWeight=0;
-        get(Start);
 
         while (loopy){
             System.out.println("num before: "+num);
-            if(num>1){
-                get(next);
-            }
-            for (int j=0;j<=(todo.size()-1);j++){
-                todo.get(j).addOnWeight(baseWeight);
-                q.doEnqueue(todo.get(j));
-                System.out.println("enqueueing: "+todo.get(j).getName());
+            getLinks(Start); //adds links that have nodes the same as start to an array (??)
+
+            //goes through all the links in the arraylist todo, 
+            //checks if they've been processed before, if not, 
+            //then enqueues them to my priority queue
+            //and adds the base weight to it
+            for (int j=0;j<=(todo.size()-1);j++){ 
+                if (!checkQueue(todo.get(j).getName())){ 
+                    q.doEnqueue(todo.get(j));
+                    System.out.println("enqueueing: "+todo.get(j).getName());
+                    System.out.println("current weight: "+todo.get(j).getWeight()+"adding on: "+baseWeight);
+                    todo.get(j).addOnWeight(baseWeight);
+                } else {
+                    System.out.println(todo.get(j).getName()+"(enqueue) already added.");
+                }
             } 
-            //dummy=q.dequeue();
-            done.add(q.dequeue());
-            baseWeight=baseWeight+done.get(done.size()-1).getWeight();
-            System.out.println("next before: "+next);
-            next=done.get(done.size()-1).getOther(Start);
-            System.out.println("next after: "+next);
+            todo.clear(); 
+            //Link dummy=q.dequeue();
+            if(!checkLink(done,q.getFront().getName())){
+                done.add(q.getFront());
+                baseWeight=q.getFront().getWeight();
+                System.out.println("(dequeue) adding to done: "+done.get(num).getName());
+                System.out.println("(dequeue) baseweight is "+baseWeight);
+
+            } else {
+                Link dummy=q.getFront();
+                done.add(findNextFollower(dummy));
+                System.out.println("//(dequeue) adding to done: "+done.get(num).getName());
+            }
+            System.out.println("baseweight now: "+baseWeight);
+
+            //checks if link is al
+            /*if(!checkLink(done,dummy.getName())){
+            done.add(dummy);
+            System.out.println("(dequeue) adding to done: "+done.get(num-1).getName());
+            } else {
+            System.out.println("(dequeue) already added.");
+            }
+             */
+            System.out.println("next before: "+Start);
+            Start=done.get(done.size()-1).getOther(Start);
+            System.out.println("next after: "+Start);
             num++;
             System.out.println("num after: "+num);
 
+            for (int i=0;i<=(done.size()-1);i++){
+                System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
+            }
+
             counter=0;
             for (int j=0;j<=(nodes.length-1);j++){
-                if (check(nodes[j].getName())){
+                if (checkNode(done, nodes[j].getName())){
+                    System.out.println(nodes[j].getName()+checkNode(done,nodes[j].getName()));
                     counter++;
                 }                
             } 
-            System.out.println(counter);
-            if(counter==finished.length){
+            System.out.println("counter: "+counter);
+            if(counter==numberOfNodes){
                 loopy=false;
             }
         }
-        for (int i=0;i<=(finished.length-1);i++){
-            System.out.println(finished[i].getNodeA()+" links to "+finished[i].getNodeB());
+        for (int i=0;i<=(done.size()-1);i++){
+            System.out.println(done.get(i).getNodeA()+" links to "+done.get(i).getNodeB());
         }
-    } 
+    }
 
-    public boolean check(String s){
+    public boolean andOr(boolean first, boolean second){
+        if(first && second){
+            return true;
+        } else if (first || second){
+            return true;
+        }
+        return false;
+    }
+
+    public Link findNextFollower(Link lin){
+        if(!checkLink(done,lin.getFollower().getName())){
+            return lin.getFollower();
+        } else{
+            return findNextFollower(lin.getFollower());
+        }
+    }
+
+    public void test(){
+        for (int i=0;i<=4;i++){
+            q.doEnqueue(l[i]);
+        }
+    }
+
+    public boolean checkQueue(String s){
+        Link a =q.getFront();
+        for(i=0;i<=(q.len()-1);i++){
+            if(s.equals(a.getName())){
+                return true;
+            } else {
+                a=a.getFollower();
+            }
+        }
+        return false;
+    }
+
+    public boolean checkLink(ArrayList<Link> a, String s){
+        for(i=0;i<=(a.size()-1);i++){
+            if(s.equals(a.get(i).getName())){
+                return true;
+            } else if (a.get(i)==null){
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkNode(ArrayList<Link> aar, String s){
         boolean yes=true;
         int x=0;
         while(yes){
-            if(s.equals(done.get(0).getNodeA())||s.equals(finished[x].getNodeB())){
+            if(s.equals(aar.get(x).getNodeA())||s.equals(aar.get(x).getNodeB())){
                 yes=false;
                 return true;
-            } else if(x>=(finished.length-1)){
+            } else if(x>=(aar.size()-1)){
                 yes=false;
                 return false;
-            } else if(finished[x]==null){
+            } else if(aar.get(x)==null){
                 yes=false;
                 return false;
             } else {
@@ -169,10 +242,19 @@ public class graph
         return false; 
     }
 
-    public void get(String n){
+    public void getLinks(String n){
         for(int i=0;i<=(numberOfLinks-1);i++){
             if(n.equals(l[i].getNodeA())||n.equals(l[i].getNodeB())){
-                todo.add(l[i]);
+                if(todo.size()>0 && !checkLink(todo,l[i].getName())){
+                    System.out.println("(get) adding: "+l[i].getName());
+                    todo.add(l[i]);
+                }else if(todo.size()==0){
+                    System.out.println("(get) adding: "+l[i].getName());
+                    todo.add(l[i]);
+                } else {
+                    System.out.println("(get) already added: "+l[i].getName());
+                }
+
             }
         }
 
