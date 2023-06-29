@@ -94,7 +94,6 @@ public class graph
 
     /*finds the shortest path to each node from the one you pick*/
     public void shortestPath(String Start){
-        initialise(); //reads from file
         done.add(new Link()); 
         done.get(0).addWeight(0);
         done.get(0).addLinkA(getNode(Start));
