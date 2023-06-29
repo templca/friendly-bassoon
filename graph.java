@@ -73,8 +73,6 @@ public class graph
         }
 
     }
-    
-    
 
     /* this method takes in a node name and returns the shortest path
        to each other node */
@@ -109,7 +107,7 @@ public class graph
 
             //goes through all the links in the arraylist todo, 
             //checks if they've been processed before, if not, 
-            //then enqueues them to my priority 
+            //then enqueues them to my priority queue
             //and adds the base weight to it
             for (int j=0;j<=(todo.size()-1);j++){ 
                 if (!checkQueue(todo.get(j).getName())){ 

@@ -13,7 +13,7 @@ import java.io.File;
 public class filereader
 {
     // instance variables - replace the example below with your own
-    final String FILENAME="data.csv";
+    final String FILENAME="data1.csv";
     final int MAXLINES=100;
     final int VALUESPERLINE=3;
     File thefile = new File(FILENAME);
