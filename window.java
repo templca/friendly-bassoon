@@ -24,14 +24,12 @@ public class window extends JFrame implements ActionListener
     JMenuItem menuItem;
     private int nodeNumber=0;
     private int linkNumber=0;
-    int[] nodeCenterX;
-    int[] nodeCenterY;
-    int[] otherNodeX;
-    int[] otherNodeY;
     int x1;
     int y1;
-
+    int fontSize=25;
+    
     filereader file = new filereader();
+    graph data=new graph();
 
     public void actionPerformed(ActionEvent e) {
         String cmd=e.getActionCommand();
@@ -53,14 +51,14 @@ public class window extends JFrame implements ActionListener
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
         int circleSize=100;
-        int centering=40;
+        int centering=5;
         int b=1;
-        Font stringFont = new Font("SansSerif", Font.PLAIN, 25 );
+        Font stringFont = new Font("SansSerif", Font.PLAIN, fontSize );
         g2.setFont( stringFont );
         
         //draws the lines
         for(int j=0;j<=(linkNumber-1);j++){
-            g2.setColor(Color.RED);
+            g2.setColor(Color.BLUE);
             int startX=findNode("x",file.getData(0,nodeNumber+j+1));
             int startY=findNode("y",file.getData(0,nodeNumber+j+1));
             int endX=findNode("x",file.getData(1,nodeNumber+j+1));
@@ -78,10 +76,10 @@ public class window extends JFrame implements ActionListener
             x=Integer.parseInt(file.getData(1,b));
             y=Integer.parseInt(file.getData(2,b));
             g2.fillOval(x,y,circleSize,circleSize);
-            x1=x+(circleSize/2);
+            x1=x+(circleSize/2)-centering;
             y1=y+(circleSize/2);
             g2.setColor(Color.WHITE);
-            g2.drawString(file.getData(0,b),x1,y1);
+            g2.drawString(file.getData(0,b),x1,y1+centering);
             
             b++;
         }
@@ -124,10 +122,6 @@ public class window extends JFrame implements ActionListener
         // initialise instance variables
         nodeNumber=Integer.parseInt(file.getData(0,0));
         linkNumber=(file.getLines()-(nodeNumber+1));
-        nodeCenterX= new int[nodeNumber];
-        nodeCenterY= new int[nodeNumber];
-        otherNodeX= new int[linkNumber];
-        otherNodeY= new int[linkNumber];
 
         setTitle("djikstra");
         this.getContentPane().setPreferredSize(new Dimension(700,700));

@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=linkqueue
+comment0.text=\r\n\ cara\ templeton\r\n\ \r\n\ \r\n\ 12/05\r\n\ makes\ a\ queue\ that\ uses\ links\ instead\ of\ elements\r\n
+comment1.params=
+comment1.target=linkqueue()
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ linkqueue\r\n
+comment2.params=nlink
+comment2.target=void\ enqueue(Link)
+comment3.params=y\ n
+comment3.target=Link\ findFollower(Link,\ Link)
+comment4.params=
+comment4.target=Link\ dequeue()
+comment5.params=
+comment5.target=boolean\ queueEmpty()
+comment6.params=
+comment6.target=int\ getCostfront()
+comment7.params=
+comment7.target=Link\ getfront()
+numComments=8

@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=filereader
+comment1.params=
+comment1.target=filereader()
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ filereader\r\n
+comment2.params=
+comment2.target=int\ getLines()
+comment3.params=column\ row
+comment3.target=java.lang.String\ getData(int,\ int)
+numComments=4

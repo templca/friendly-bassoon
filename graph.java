@@ -73,9 +73,10 @@ public class graph
         }
 
     }
+    
+    
 
-    /* this method takes in a node name and returns the shortest path
-       to each other node */
+    /*this method takes a string and returns the node with the name of that string*/
     public Node getNode(String n){
         boolean yes=true;
         int x=0;
@@ -92,7 +93,8 @@ public class graph
         return nodes[x];
     }
 
-    /*finds the shortest path to each node from the one you pick*/
+    /* this method takes in a node name and returns the shortest path
+       to each other node */
     public void shortestPath(String Start){
         done.add(new Link()); 
         done.get(0).addWeight(0);
@@ -102,12 +104,14 @@ public class graph
         int baseWeight=0;
 
         while (loopy){
+            System.out.println("");
             System.out.println("num before: "+num);
+            System.out.println("start is: "+Start);
             getLinks(Start); //adds links that have nodes the same as start to an array (??)
 
             //goes through all the links in the arraylist todo, 
             //checks if they've been processed before, if not, 
-            //then enqueues them to my priority queue
+            //then enqueues them to my priority 
             //and adds the base weight to it
             for (int j=0;j<=(todo.size()-1);j++){ 
                 if (!checkQueue(todo.get(j).getName())){ 
@@ -126,14 +130,14 @@ public class graph
             if(!checkLink(done,q.getFront().getName())){
                 done.add(q.getFront());
                 baseWeight=q.getFront().getWeight();
-                System.out.println("(dequeue) adding to done: "+done.get(num).getName());
-                System.out.println("(dequeue) baseweight is "+baseWeight);
+                System.out.println("() adding to done: "+done.get(num).getName());
+                System.out.println("() baseweight is "+baseWeight);
 
             } else {
                 Link dummy=q.getFront();
                 done.add(findNextFollower(dummy));
                 baseWeight=done.get(num).getWeight();
-                System.out.println("//(dequeue) adding to done: "+done.get(num).getName());
+                System.out.println("//() adding to done: "+done.get(num).getName());
             }
             System.out.println("baseweight now: "+baseWeight);
             System.out.println("next before: "+Start);
@@ -227,6 +231,13 @@ public class graph
     /*this method adds all the links with the right name 
      * to an arraylist */
     public void getLinks(String n){
+        if(n==null){
+            System.out.println("trying to find links for null");
+            return;
+        }
+        if(l.length!=numberOfLinks){
+            System.out.println("link number doesn't match");
+        }
         for(int i=0;i<=(numberOfLinks-1);i++){
             if(n.equals(l[i].getNodeA())||n.equals(l[i].getNodeB())){
                 if(todo.size()>0 && !checkLink(todo,l[i].getName())){

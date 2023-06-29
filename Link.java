@@ -77,10 +77,18 @@ public class Link
     }
 
     public String getNodeA(){
+        if(x.getName()==null){
+            System.out.println("node a null");
+            return "";
+        }
         return x.getName();
     }
 
     public String getNodeB(){
+        if(x.getName()==null){
+            System.out.println("node b null");
+            return "";
+        }
         return y.getName();
     }
 

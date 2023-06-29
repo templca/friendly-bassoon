@@ -1,0 +1,26 @@
+#BlueJ class context
+comment0.target=Queue
+comment0.text=\r\n\ Simple\ queue\ class\ that\ works\ with\ generic\ Links.\r\n\r\n\ @author\ Bill\ Viggers\r\n\ @version\ 21-May-2020\r\n\ 13-June-2023\ -\ added\ features\ for\ priority\r\n
+comment1.params=
+comment1.target=Queue()
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ Queue\r\n
+comment2.params=box
+comment2.target=void\ doEnqueue(Link)
+comment2.text=void\ enqueue(O\ item){\r\n\ \ \ \ \ \ \ \ Link\ box\ \=\ new\ Link(item);\ //\ Wrap\ our\ item\ up\ in\ a\ box\ to\ put\ in\ the\ queue\r\n\ \ \ \ \ \ \ \ doEnqueue(box);\r\n\ \ \ \ }\ \ enqueue\r\n\r\n\ \ \ \ void\ enqueue\ (O\ item,\ int\ pri){\r\n\ \ \ \ \ \ \ \ Link\ box\ \=\ new\ Link(item,pri);\r\n\ \ \ \ \ \ \ \ doEnqueue(box);\ }\r\n
+comment3.params=after\ toInsert
+comment3.target=void\ insert(Link,\ Link)
+comment4.params=
+comment4.target=Link\ dequeue()
+comment4.text=\r\n\ Remove\ the\ front\ item\ from\ the\ queue\r\n
+comment5.params=
+comment5.target=boolean\ queueEmpty()
+comment5.text=\r\n\ Says\ if\ the\ queue\ is\ empty\r\n
+comment6.params=
+comment6.target=int\ len()
+comment7.params=
+comment7.target=int\ lenREntry()
+comment8.params=current
+comment8.target=int\ lenR(Link)
+comment9.params=
+comment9.target=Link\ getFront()
+numComments=10
