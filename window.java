@@ -23,31 +23,20 @@ public class window extends JFrame implements ActionListener
     JMenu menu;
     JMenuItem menuItem;
     private int nodeNumber=0;
+    private int linkNumber=0;
+    int[] nodeCenterX;
+    int[] nodeCenterY;
+    int[] otherNodeX;
+    int[] otherNodeY;
+    int x1;
+    int y1;
 
-    Canvas myGraphic;
-    final String fileName="redcircle100x100.png";
-    ImageIcon image = new ImageIcon(fileName);
-
-    private int width=100;
-    private int height=100;
+    filereader file = new filereader();
 
     public void actionPerformed(ActionEvent e) {
         String cmd=e.getActionCommand();
         switch (cmd) {
             case "add node": 
-
-                if(nodeNumber==0){
-                    x=50;
-
-                } else if (nodeNumber==1){
-                    x=x+200;
-                }
-                else if (isEven(nodeNumber)){
-                    y=y+100;
-                    x=x-200;
-                } else { 
-                    x=x+200; } 
-                nodeNumber++;
                 repaint();
                 break;
             case "quit": System.exit(0);
@@ -63,10 +52,55 @@ public class window extends JFrame implements ActionListener
     public void paint (Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
-        
-        
-        image.paintIcon(this,g,x, y);
+        int circleSize=100;
+        int b=1;
 
+        for(int i=0;i<=(nodeNumber-1);i++){
+            x=Integer.parseInt(file.getData(1,b));
+            y=Integer.parseInt(file.getData(2,b));
+            g2.drawOval(x,y,circleSize,circleSize);
+            x1=x+50;
+            nodeCenterX[i]=x1;
+            y1=y+50;
+            nodeCenterY[i]=y1;
+            g2.drawString(file.getData(0,b),nodeCenterX[i],nodeCenterY[i]);
+
+            b++;
+        }
+        for(int j=0;j<=(linkNumber-1);j++){
+            String test=file.getData(1,nodeNumber+j+1);
+            int numberX=findNode("x",test)+50;
+            int numberY=findNode("y",test)+50;
+            System.out.println("node: "+file.getData(0,j+nodeNumber+1));
+            System.out.println("test: "+test);
+            System.out.println("number x: "+numberX);
+            System.out.println("number y: "+numberY);
+
+            Line2D lin = new Line2D.Float(nodeCenterX[j],nodeCenterY[j],numberX,numberY);
+            g2.draw(lin);
+        }
+
+    }
+
+    public int findNode(String coordinate, String a){
+        if(coordinate=="x"){
+            for(int i=0;i<=(linkNumber-1);i++){
+                System.out.println(file.getData(1,nodeNumber+i)+" link");
+                System.out.println(file.getData(0,1+i)+" node");
+
+                if(file.getData(1,nodeNumber+i).equals(file.getData(0,1+i))){
+                    return Integer.parseInt(file.getData(1,i));
+                } 
+            }
+        }else {
+            for(int i=0;i<=(linkNumber-1);i++){
+                if(file.getData(1,nodeNumber+i).equals(file.getData(0,1+i))){
+                    return Integer.parseInt(file.getData(2,i));
+                } 
+            }
+        }
+
+        return 1;
     }
 
     public void mouseExited(MouseEvent e) {System.out.println("exit");}
@@ -85,6 +119,13 @@ public class window extends JFrame implements ActionListener
     public window()
     {
         // initialise instance variables
+        nodeNumber=Integer.parseInt(file.getData(0,0));
+        linkNumber=(file.getLines()-(nodeNumber+1));
+        nodeCenterX= new int[nodeNumber];
+        nodeCenterY= new int[nodeNumber];
+        otherNodeX= new int[linkNumber];
+        otherNodeY= new int[linkNumber];
+
         setTitle("djikstra");
         this.getContentPane().setPreferredSize(new Dimension(700,700));
         this.getContentPane().setLayout(null);
@@ -94,9 +135,6 @@ public class window extends JFrame implements ActionListener
 
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(400,400));
-        myGraphic = new Canvas();
-        panel.add(myGraphic);
-
         menuBar=new JMenuBar();
         this.setJMenuBar (menuBar);
 
