@@ -37,6 +37,14 @@ public class graph
         q = new Queue();
 
     }
+    
+    public int getNodeNumber(){
+        return numberOfNodes;
+    }
+    
+    public int getLinkNumber(){
+        return numberOfLinks;
+    }
 
     //reads from file
     public void initialise(){

@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.Scanner;
 import java.awt.event.*; //listener
 import java.awt.geom.*; //geometry
+import javax.swing.JButton;
 
 public class window extends JFrame implements ActionListener
 {
@@ -22,23 +23,32 @@ public class window extends JFrame implements ActionListener
     JMenuBar menuBar;
     JMenu menu;
     JMenuItem menuItem;
+    JButton myButton;
+    TextArea area;
     private int nodeNumber=0;
     private int linkNumber=0;
     int x1;
     int y1;
     int fontSize=25;
-    
+    boolean paintPath=false;
+    String StartNode;
+
     filereader file = new filereader();
     graph data=new graph();
 
     public void actionPerformed(ActionEvent e) {
-        String cmd=e.getActionCommand();
-        switch (cmd) {
-            case "add node": 
-                repaint();
-                break;
-            case "quit": System.exit(0);
-        }
+        String cmd=e.getActionCommand(); 
+            switch (cmd) {
+                case "add node": 
+                    repaint();
+                    break;
+                case "quit": System.exit(0);
+                    break;
+                case "shortest path": 
+                    DialogBox();
+                    paintPath=true;
+                    break;
+            }
     }
 
     public boolean isEven(int number){
@@ -55,6 +65,8 @@ public class window extends JFrame implements ActionListener
         int b=1;
         Font stringFont = new Font("SansSerif", Font.PLAIN, fontSize );
         g2.setFont( stringFont );
+
+        
         
         //draws the lines
         for(int j=0;j<=(linkNumber-1);j++){
@@ -80,12 +92,19 @@ public class window extends JFrame implements ActionListener
             y1=y+(circleSize/2);
             g2.setColor(Color.WHITE);
             g2.drawString(file.getData(0,b),x1,y1+centering);
-            
+
             b++;
         }
 
+        if(paintPath){
+        }
+
     }
-    
+
+    public void DialogBox(){
+        
+    }
+
     public int findNode(String coordinate, String a){
         if(coordinate=="x"){
             for(int i=0;i<=(nodeNumber);i++){
@@ -120,8 +139,9 @@ public class window extends JFrame implements ActionListener
     public window()
     {
         // initialise instance variables
-        nodeNumber=Integer.parseInt(file.getData(0,0));
-        linkNumber=(file.getLines()-(nodeNumber+1));
+        data.initialise();
+        nodeNumber=data.getNodeNumber();
+        linkNumber=data.getLinkNumber();
 
         setTitle("djikstra");
         this.getContentPane().setPreferredSize(new Dimension(700,700));
@@ -145,6 +165,11 @@ public class window extends JFrame implements ActionListener
         menuItem=new JMenuItem("quit");
         menuItem.addActionListener(this);
         menu.add(menuItem);
+
+        menuItem=new JMenuItem("shortest path");
+        menuItem.addActionListener(this);
+        menu.add(menuItem);
+
         this.pack();
     }
 }
