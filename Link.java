@@ -16,6 +16,8 @@ public class Link
     private Link follower;
     String name;
     int runB=0;
+    
+    
 
     /**
      * Constructor for objects of class Link
@@ -77,18 +79,10 @@ public class Link
     }
 
     public String getNodeA(){
-        if(x.getName()==null){
-            System.out.println("node a null");
-            return "";
-        }
         return x.getName();
     }
 
     public String getNodeB(){
-        if(x.getName()==null){
-            System.out.println("node b null");
-            return "";
-        }
         return y.getName();
     }
 
@@ -100,4 +94,6 @@ public class Link
         }
         return null;
     }
+    
+    
 }

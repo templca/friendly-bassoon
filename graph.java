@@ -28,6 +28,7 @@ public class graph
     String next;
     ArrayList<Link> done = new ArrayList<Link>();
     ArrayList<Link> todo = new ArrayList<Link>();
+    ArrayList<Link> shortest = new ArrayList<Link>();
     
     /**
      * Constructor for objects of class Network
@@ -45,6 +46,44 @@ public class graph
     public int getLinkNumber(){
         return numberOfLinks;
     }
+    
+    public String getNodeName(int i){
+        return nodes[i].getName();
+    }
+    
+    //true is a, false is b
+    public String getFromDone(int i,boolean AorB){
+        if(AorB){
+            return done.get(i).getNodeA();
+        } else {
+            return done.get(i).getNodeB();
+        }
+    }
+    
+    public String getFromLink(int i,boolean AorB){
+        if(AorB){
+            return l[i].getNodeA();
+        } else {
+            return l[i].getNodeB();
+        }
+    }
+    
+    public int doneSize(){
+        return done.size();
+    }
+    
+    public int getLinkWeight(int i){
+        return l[i].getWeight();
+    }
+    
+    /*this method returns the x value from a node if true and the y if false*/
+    public int getCoordinate(int number,boolean yes){
+        if(yes){
+            return nodes[number].getX();
+        } else {
+            return nodes[number].getY();
+        }
+    }
 
     //reads from file
     public void initialise(){
@@ -56,6 +95,8 @@ public class graph
         for (int i=0;i<=(numberOfNodes-1);i++){
             
             nodes[i]=new Node(read.getData(0,count));
+            nodes[i].setX(Integer.parseInt(read.getData(1,count)));
+            nodes[i].setY(Integer.parseInt(read.getData(2,count)));
             count++;
         }
 
@@ -176,6 +217,9 @@ public class graph
                 System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
             }
     }
+    
+    public void pathArray(String start,String end){
+    }
 
     /*this method checks if a link is in done, 
     if its not then it looks at its follower */
@@ -234,6 +278,16 @@ public class graph
             }
         }
         return false; 
+    }
+    
+    //basically a getLinks method but it looks through the done arraylist
+    public void findLinksDone(String n){
+        todo.clear();
+        for(int i=0;i<done.size();i++){
+            if(n.equals(done.get(i).getNodeA())|| n.equals(done.get(i).getNodeB())){
+                todo.add(done.get(i));
+            } 
+        }
     }
 
     /*this method adds all the links with the right name 

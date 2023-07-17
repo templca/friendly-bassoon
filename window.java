@@ -31,24 +31,31 @@ public class window extends JFrame implements ActionListener
     int y1;
     int fontSize=25;
     boolean paintPath=false;
-    String StartNode;
+    String remember;
+    String dialogTitle;
+    String startNode;
+    String endNode;
 
-    filereader file = new filereader();
     graph data=new graph();
-
     public void actionPerformed(ActionEvent e) {
         String cmd=e.getActionCommand(); 
-            switch (cmd) {
-                case "add node": 
-                    repaint();
-                    break;
-                case "quit": System.exit(0);
-                    break;
-                case "shortest path": 
-                    DialogBox();
-                    paintPath=true;
-                    break;
-            }
+        switch (cmd) {
+            case "add node": 
+                repaint();
+                break;
+            case "quit": System.exit(0);
+                break;
+            case "shortest path":
+                dialogTitle="which node to start?";
+                DialogBox();
+                startNode=remember;
+                dialogTitle="which node to finish?";
+                endNode=remember;
+                DialogBox();
+                paintPath=true;
+                repaint();
+                break;
+        }
     }
 
     public boolean isEven(int number){
@@ -67,16 +74,15 @@ public class window extends JFrame implements ActionListener
         g2.setFont( stringFont );
 
         
-        
         //draws the lines
         for(int j=0;j<=(linkNumber-1);j++){
             g2.setColor(Color.BLUE);
-            int startX=findNode("x",file.getData(0,nodeNumber+j+1));
-            int startY=findNode("y",file.getData(0,nodeNumber+j+1));
-            int endX=findNode("x",file.getData(1,nodeNumber+j+1));
-            int endY=findNode("y",file.getData(1,nodeNumber+j+1));
+            int startX=findNodeCoordinate("x",data.getFromLink(j,true));
+            int startY=findNodeCoordinate("y",data.getFromLink(j,true));
+            int endX=findNodeCoordinate("x",data.getFromLink(j,false));
+            int endY=findNodeCoordinate("y",data.getFromLink(j,false));
 
-            int lineWeight=Integer.parseInt(file.getData(2,nodeNumber+j+1));
+            int lineWeight=data.getLinkWeight(j);
             g2.setStroke(new BasicStroke(lineWeight));
             Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
             g2.draw(lin);
@@ -85,37 +91,57 @@ public class window extends JFrame implements ActionListener
         //draws nodes and gives them the names
         for(int i=0;i<=(nodeNumber-1);i++){
             g2.setColor(Color.BLACK);
-            x=Integer.parseInt(file.getData(1,b));
-            y=Integer.parseInt(file.getData(2,b));
+            x=data.getCoordinate(i,true);
+            y=data.getCoordinate(i,false);
             g2.fillOval(x,y,circleSize,circleSize);
             x1=x+(circleSize/2)-centering;
             y1=y+(circleSize/2);
             g2.setColor(Color.WHITE);
-            g2.drawString(file.getData(0,b),x1,y1+centering);
+            g2.drawString(data.getNodeName(i),x1,y1+centering);
 
             b++;
         }
 
         if(paintPath){
+            data.shortestPath("s");
+            
+
+            //drawing lines
+            for(int i=0;i<data.doneSize();i++){
+                int startX =findNodeCoordinate("x",data.getFromDone(i,true));
+                int startY =findNodeCoordinate("y",data.getFromDone(i,true));
+
+                int endX =findNodeCoordinate("x",data.getFromDone(i,false));
+                int endY =findNodeCoordinate("y",data.getFromDone(i,false));
+                int lineWeight=data.getLinkWeight(i);
+                g2.setColor(Color.RED);
+                g2.setStroke(new BasicStroke(lineWeight));
+                Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
+                g2.draw(lin);
+
+            }
         }
 
     }
 
     public void DialogBox(){
-        
+        intputDialog box = new intputDialog(dialogTitle);
+        box.setLocationRelativeTo(this);
+        box.setVisible(true);
+        remember=box.getText();
     }
 
-    public int findNode(String coordinate, String a){
+    public int findNodeCoordinate(String coordinate, String a){
         if(coordinate=="x"){
             for(int i=0;i<=(nodeNumber);i++){
-                if(a.equals(file.getData(0,i))){
-                    return Integer.parseInt(file.getData(1,i));
+                if(a.equals(data.getNodeName(i))){
+                    return data.getCoordinate(i,true);
                 }
             }
         }else if(coordinate=="y"){
             for(int i=0;i<=(nodeNumber);i++){
-                if(a.equals(file.getData(0,i))){
-                    return Integer.parseInt(file.getData(2,i));
+                if(a.equals(data.getNodeName(i))){
+                    return data.getCoordinate(i,false);
                 }
             }
         }

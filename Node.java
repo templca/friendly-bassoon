@@ -10,6 +10,9 @@ public class Node
 {
     // instance variables - replace the example below with your own
     private String name;
+    private int x;
+    private int y;
+
 
     /**
      * Constructor for objects of class Node
@@ -27,9 +30,24 @@ public class Node
     public void addName(String name){
         this.name=name;
     }
-    
+
     public String getName(){
         return name;
     }
     
+    public void setX(int number){
+        x=number;
+    }
+    
+    public void setY(int number){
+        y=number;
+    }
+    
+    public int getX(){
+        return x;
+    }
+    
+    public int getY(){
+        return y;
+    }
 }
