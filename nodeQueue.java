@@ -128,27 +128,33 @@ public class nodeQueue<O>
     public void remove(Node removee){
         if(removee==front){
             dequeue();
-        }else {
-            System.out.println("front: "+findInFront(removee).getName()+" adding follower: "+removee.getFollowerName());
+        }else if (removee==end){
+            System.out.println("removee is at the end of queue,");
+            findInFront(removee).addFollower(null);
+        } else {
+            System.out.println("in frontof : "+findInFront(removee).getName()+" adding follower: "+removee.getFollowerName());
             findInFront(removee).addFollower(removee.getFollower());
-            removee.addFollower(null); 
         }
     }
 
     public void removeAll(String n){
-        System.out.println("n is: "+n);
         Node r=front;
         for(int i=0;i<len();i++){
             if(n.equals(r.getName())){
                 System.out.println("--removing: "+r.getName()+"("+r.getPreviousName()+")");
-                Node remember=r;
-                System.out.println(
                 remove(r);
-                r=remember.getFollower();
+                r=front;
                 System.out.println("//r is now: "+r.getName());
-            } else {                
+                System.out.println("i is: "+i);
+            }
+            else {  
+                if(r.getFollower()==null){
+                    System.out.println("nullr is: "+r.getName());
+                    
+                } else{
                 r=r.getFollower();
-                System.out.println("r is now "+r.getName());
+                System.out.println("r is now "+r.getName()); }
+                System.out.println("//i is: "+i);
             }
         }
     }
@@ -162,6 +168,12 @@ public class nodeQueue<O>
         C.setCost(6);
         Node D = new Node("a");
         D.setCost(8);
+        Node E = new Node("b");
+        E.setCost(9);
+        Node F = new Node("c");
+        F.setCost(11);
+        Node G = new Node("a");
+        G.setCost(15);
 
         A.addPrevious(B);
         B.addPrevious(A);
@@ -173,7 +185,8 @@ public class nodeQueue<O>
         doEnqueue(C);
         doEnqueue(D);
 
-        removeAll("b");
+        remove(B);
+        
         System.out.println(len());
 
     }

@@ -48,10 +48,13 @@ public class window extends JFrame implements ActionListener
             case "shortest path":
                 dialogTitle="which node to start?";
                 DialogBox();
+                System.out.println("remember1 is: "+remember);
                 startNode=remember;
+                
                 dialogTitle="which node to finish?";
-                endNode=remember;
                 DialogBox();
+                System.out.println("remember1 is: "+remember);
+                endNode=remember;
                 paintPath=true;
                 repaint();
                 break;
@@ -104,20 +107,20 @@ public class window extends JFrame implements ActionListener
 
         if(paintPath){
             data.shortestPath("s");
-            
+            data.pathArray(startNode,endNode);
 
             //drawing lines
             for(int i=0;i<data.doneSize();i++){
-                int startX =findNodeCoordinate("x",data.getFromDone(i,true));
-                int startY =findNodeCoordinate("y",data.getFromDone(i,true));
+                //int startX =findNodeCoordinate("x",data.getFromShortest(i,true));
+                //int startY =findNodeCoordinate("y",data.getFromShortest(i,true));
 
-                int endX =findNodeCoordinate("x",data.getFromDone(i,false));
-                int endY =findNodeCoordinate("y",data.getFromDone(i,false));
+                //int endX =findNodeCoordinate("x",data.getFromShortest(i,false));
+                //int endY =findNodeCoordinate("y",data.getFromShortest(i,false));
                 int lineWeight=data.getLinkWeight(i);
                 g2.setColor(Color.RED);
                 g2.setStroke(new BasicStroke(lineWeight));
-                Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
-                g2.draw(lin);
+                //Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
+                //g2.draw(lin);
 
             }
         }
