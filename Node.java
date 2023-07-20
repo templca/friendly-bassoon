@@ -12,6 +12,11 @@ public class Node
     private String name;
     private int x;
     private int y;
+    
+    private int cost;
+    private Node previousNode;
+    
+    private Node follower;
 
 
     /**
@@ -47,7 +52,44 @@ public class Node
         return x;
     }
     
+    
     public int getY(){
         return y;
+    }
+    
+    public void addFollower(Node follower){
+        this.follower=follower;
+    }
+
+    public String getFollowerName(){
+        return this.follower.getName();
+    }
+
+    public Node getFollower(){
+        return this.follower;
+    }
+    
+    public void setCost(int cost){
+        this.cost=cost;
+    }
+    
+    public int getCost(){
+        return this.cost;
+    }
+    
+    public void addOnCost(int baseWeight){
+        cost=cost+baseWeight;
+    }
+    
+    public void addPrevious(Node previous){
+        this.previousNode=previous;
+    }
+
+    public String getPreviousName(){
+        return this.previousNode.getName();
+    }
+
+    public Node getPrevious(){
+        return this.previousNode;
     }
 }

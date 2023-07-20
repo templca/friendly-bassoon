@@ -13,6 +13,7 @@ public class graph
 {
     // instance variables - replace the example below with your own
     Queue q;
+    nodeQueue nq;
     Link[] l;
     Node[] nodes;
     filereader read = new filereader();
@@ -29,28 +30,32 @@ public class graph
     ArrayList<Link> done = new ArrayList<Link>();
     ArrayList<Link> todo = new ArrayList<Link>();
     ArrayList<Link> shortest = new ArrayList<Link>();
-    
+
+    ArrayList<Node> doneN = new ArrayList<Node>();
+    ArrayList<Node> todoN = new ArrayList<Node>();
+
     /**
      * Constructor for objects of class Network
      */
     public graph()
     {
         q = new Queue();
+        nq = new nodeQueue();
 
     }
-    
+
     public int getNodeNumber(){
         return numberOfNodes;
     }
-    
+
     public int getLinkNumber(){
         return numberOfLinks;
     }
-    
+
     public String getNodeName(int i){
         return nodes[i].getName();
     }
-    
+
     //true is a, false is b
     public String getFromDone(int i,boolean AorB){
         if(AorB){
@@ -59,7 +64,7 @@ public class graph
             return done.get(i).getNodeB();
         }
     }
-    
+
     public String getFromLink(int i,boolean AorB){
         if(AorB){
             return l[i].getNodeA();
@@ -67,15 +72,15 @@ public class graph
             return l[i].getNodeB();
         }
     }
-    
+
     public int doneSize(){
         return done.size();
     }
-    
+
     public int getLinkWeight(int i){
         return l[i].getWeight();
     }
-    
+
     /*this method returns the x value from a node if true and the y if false*/
     public int getCoordinate(int number,boolean yes){
         if(yes){
@@ -93,7 +98,7 @@ public class graph
         nodes = new Node[numberOfNodes];
         int count=1;
         for (int i=0;i<=(numberOfNodes-1);i++){
-            
+
             nodes[i]=new Node(read.getData(0,count));
             nodes[i].setX(Integer.parseInt(read.getData(1,count)));
             nodes[i].setY(Integer.parseInt(read.getData(2,count)));
@@ -122,8 +127,7 @@ public class graph
         }
 
     }
-    
-    
+
 
     /*this method takes a string and returns the node with the name of that string*/
     public Node getNode(String n){
@@ -143,7 +147,7 @@ public class graph
     }
 
     /* this method takes in a node name and returns the shortest path
-       to each other node */
+    to each other node */
     public void shortestPath(String Start){
         done.add(new Link()); 
         done.get(0).addWeight(0);
@@ -174,8 +178,8 @@ public class graph
             } 
             todo.clear(); 
             /*checks if the front of the queue is already in the done 
-               arraylist. if it is then adds it to done, if it isn't
-               it keeps looking at the followers until there's one not in done*/
+            arraylist. if it is then adds it to done, if it isn't
+            it keeps looking at the followers until there's one not in done*/
             if(!checkLink(done,q.getFront().getName())){
                 done.add(q.getFront());
                 baseWeight=q.getFront().getWeight();
@@ -200,7 +204,7 @@ public class graph
             }
 
             /* looks through the done array and checks if all the nodes are
-               there. if they are then the loop stops.*/
+            there. if they are then the loop stops.*/
             counter=0;
             for (int j=0;j<=(nodes.length-1);j++){
                 if (checkNode(done, nodes[j].getName())){
@@ -214,10 +218,10 @@ public class graph
             }
         }
         for (int i=0;i<=(done.size()-1);i++){
-                System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
-            }
+            System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
+        }
     }
-    
+
     public void pathArray(String start,String end){
     }
 
@@ -258,7 +262,7 @@ public class graph
         return false;
     }
 
-       /*this method returns true if there's a node with the inputted 
+    /*this method returns true if there's a node with the inputted 
      * name is in the selected array*/
     public boolean checkNode(ArrayList<Link> aar, String s){
         boolean yes=true;
@@ -279,7 +283,7 @@ public class graph
         }
         return false; 
     }
-    
+
     //basically a getLinks method but it looks through the done arraylist
     public void findLinksDone(String n){
         todo.clear();
@@ -315,6 +319,87 @@ public class graph
             }
         }
 
+    }
+
+    public boolean checkDoneN(String n){
+        System.out.println("check-n is: "+n);
+        boolean running=true;
+        int counter=0;
+        while(running){
+            if(n.equals(doneN.get(counter).getName())){
+
+                System.out.println("check-comparing to: "+doneN.get(counter).getName());
+                running=false;
+                return true;
+            } else if(counter>=doneN.size()-1){
+                System.out.println("check-false");
+                running=false;
+            } else if(doneN.get(counter)==null){
+                System.out.println("check-null.");
+                running=false;
+            }
+            else {
+                counter++;
+            }
+
+        }
+        return false;
+    }
+    
+    
+
+    public void shortest(String starting){
+        baseWeight=0;
+        getNode(starting).setCost(0);
+        getNode(starting).addPrevious(getNode(starting));
+        doneN.add(getNode(starting));
+        Node startingNode=getNode(starting);
+        System.out.println("starting node: "+startingNode.getName());
+
+        while(loopy){
+            nq.removeAll(starting);
+            getLinks(starting);
+
+            /*adds the previous node to all the nodes connected to the 'starting' node
+               and also adds the weight! and enqueues if it hasn't been processed before*/
+            for(int i=0;i<todo.size();i++){
+                System.out.println("i is: "+i);                
+                todoN.add(todo.get(i).getOtherN(starting));
+                todoN.get(i).addPrevious(startingNode);
+                todoN.get(i).setCost(todo.get(i).getWeight());
+                System.out.println("todoN adding: "+todoN.get(i).getName());
+                System.out.println("adding previous node ("+startingNode.getName()+") to "+todoN.get(i).getName());
+                System.out.println("cost: "+todoN.get(i).getCost());
+              
+                if(!checkDoneN(todoN.get(i).getName())){
+                    todoN.get(i).addOnCost(baseWeight);
+                    nq.doEnqueue(todoN.get(i));
+                    System.out.println("enqueueing: "+todoN.get(i).getName());
+                } else {
+                    System.out.println(todoN.get(i).getName()+" already added.");
+                }
+            }
+            todoN.clear();
+            todo.clear();
+            Node dummy;
+            dummy=nq.dequeue();
+            doneN.add(dummy);
+            baseWeight=dummy.getCost();
+            starting=dummy.getName();
+            System.out.println("dequeuing: "+dummy.getName());
+            System.out.println("baseWeight is now: "+baseWeight);
+            System.out.println("new starting: "+starting);
+            
+            
+
+            if(numberOfNodes-1==doneN.size()){
+                loopy=false;
+            }
+        }
+        for(int i=0;i<doneN.size();i++){
+            System.out.print("shortest path to: "+doneN.get(i).getName());
+            System.out.println(" is from: "+doneN.get(i).getPreviousName());
+        }
     }
 
 }

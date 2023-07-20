@@ -95,5 +95,14 @@ public class Link
         return null;
     }
     
+    public Node getOtherN(String c){
+        if(c.equals(getNodeA())){
+            return y;
+        } else if(c.equals(getNodeB())){
+            return x;
+        }
+        return null;
+    }
+    
     
 }
