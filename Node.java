@@ -17,6 +17,8 @@ public class Node
     private Node previousNode;
     
     private Node follower;
+    
+    private boolean complete=false;
 
 
     /**
@@ -91,5 +93,17 @@ public class Node
 
     public Node getPrevious(){
         return this.previousNode;
+    }
+    
+    public void isComplete(){
+        complete=true;
+    }
+    
+    public void resetComplete(){
+        complete=false;
+    }
+    
+    public boolean checkComplete(){
+        return complete;
     }
 }

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class graph
 {
     // instance variables - replace the example below with your own
-    Queue q;
     nodeQueue nq;
     Link[] l;
     Node[] nodes;
@@ -27,9 +26,8 @@ public class graph
     int baseWeight;
     int counter;
     String next;
-    ArrayList<Link> done = new ArrayList<Link>();
     ArrayList<Link> todo = new ArrayList<Link>();
-    ArrayList<Link> shortest = new ArrayList<Link>();
+    ArrayList<Node> shortest = new ArrayList<Node>();
 
     ArrayList<Node> doneN = new ArrayList<Node>();
     ArrayList<Node> todoN = new ArrayList<Node>();
@@ -39,7 +37,6 @@ public class graph
      */
     public graph()
     {
-        q = new Queue();
         nq = new nodeQueue();
 
     }
@@ -56,34 +53,41 @@ public class graph
         return nodes[i].getName();
     }
 
-    //true is a, false is b
-    public String getFromDone(int i,boolean AorB){
-        if(AorB){
-            return done.get(i).getNodeA();
-        } else {
-            return done.get(i).getNodeB();
-        }
+    
+    public String getFromShortest(int n){
+        System.out.println("from s, node: "+shortest.get(n).getName());
+        return shortest.get(n).getName();
     }
+    
+    public String getPFShortest(int n){
+        System.out.println("from p, node: "+shortest.get(n).getPreviousName());
+        return shortest.get(n).getPreviousName();
+    }
+    
 
-    public String getFromLink(int i,boolean AorB){
-        if(AorB){
+    public String getFromLink(int i,boolean A){
+        if(A){
             return l[i].getNodeA();
         } else {
             return l[i].getNodeB();
         }
     }
 
-    public int doneSize(){
-        return done.size();
+    public int shortestSize(){
+        return shortest.size();
     }
 
-    public int getLinkWeight(int i){
-        return l[i].getWeight();
+    public int getLinkWeight(int n){
+        return l[n].getWeight();
+    }
+    
+    public int getNodeCost(int c){
+        return nodes[c].getCost();
     }
 
     /*this method returns the x value from a node if true and the y if false*/
-    public int getCoordinate(int number,boolean yes){
-        if(yes){
+    public int getCoordinate(int number,boolean X){
+        if(X){
             return nodes[number].getX();
         } else {
             return nodes[number].getY();
@@ -146,106 +150,6 @@ public class graph
         return nodes[x];
     }
 
-    /* this method takes in a node name and returns the shortest path
-    to each other node */
-    public void shortestPath(String Start){
-        done.add(new Link()); 
-        done.get(0).addWeight(0);
-        done.get(0).addLinkA(getNode(Start));
-        done.get(0).addLinkB(getNode(Start));
-        int num=1;
-        int baseWeight=0;
-
-        while (loopy){
-            System.out.println("");
-            System.out.println("num before: "+num);
-            System.out.println("start is: "+Start);
-            getLinks(Start); //adds links that have nodes the same as start to an array (??)
-
-            //goes through all the links in the arraylist todo, 
-            //checks if they've been processed before, if not, 
-            //then enqueues them to my priority 
-            //and adds the base weight to it
-            for (int j=0;j<=(todo.size()-1);j++){ 
-                if (!checkQueue(todo.get(j).getName())){ 
-                    q.doEnqueue(todo.get(j));
-                    System.out.println("enqueueing: "+todo.get(j).getName());
-                    System.out.println("current weight: "+todo.get(j).getWeight()+"adding on: "+baseWeight);
-                    todo.get(j).addOnWeight(baseWeight);
-                } else {
-                    System.out.println(todo.get(j).getName()+"(enqueue) already added.");
-                }
-            } 
-            todo.clear(); 
-            /*checks if the front of the queue is already in the done 
-            arraylist. if it is then adds it to done, if it isn't
-            it keeps looking at the followers until there's one not in done*/
-            if(!checkLink(done,q.getFront().getName())){
-                done.add(q.getFront());
-                baseWeight=q.getFront().getWeight();
-                System.out.println("() adding to done: "+done.get(num).getName());
-                System.out.println("() baseweight is "+baseWeight);
-
-            } else {
-                Link dummy=q.getFront();
-                done.add(findNextFollower(dummy));
-                baseWeight=done.get(num).getWeight();
-                System.out.println("//() adding to done: "+done.get(num).getName());
-            }
-            System.out.println("baseweight now: "+baseWeight);
-            System.out.println("next before: "+Start);
-            Start=done.get(done.size()-1).getOther(Start);
-            System.out.println("next after: "+Start);
-            num++;
-            System.out.println("num after: "+num);
-
-            for (int i=0;i<=(done.size()-1);i++){
-                System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
-            }
-
-            /* looks through the done array and checks if all the nodes are
-            there. if they are then the loop stops.*/
-            counter=0;
-            for (int j=0;j<=(nodes.length-1);j++){
-                if (checkNode(done, nodes[j].getName())){
-                    System.out.println(nodes[j].getName()+checkNode(done,nodes[j].getName()));
-                    counter++;
-                }                
-            } 
-            System.out.println("counter: "+counter);
-            if(counter==numberOfNodes){
-                loopy=false;
-            }
-        }
-        for (int i=0;i<=(done.size()-1);i++){
-            System.out.println("DONE: "+done.get(i).getNodeA()+" links to "+done.get(i).getNodeB()+" with weight: "+done.get(i).getWeight());
-        }
-    }
-
-    /*this method checks if a link is in done, 
-    if its not then it looks at its follower */
-    public Link findNextFollower(Link lin){
-        if(!checkLink(done,lin.getFollower().getName())){
-            return lin.getFollower();
-        } else{
-            return findNextFollower(lin.getFollower());
-        }
-    }
-
-    /* this method returns true if there is a link with the inputted 
-     * name in the queue */
-    public boolean checkQueue(String s){
-        Link a =q.getFront();
-        for(int i=0;i<=(q.len()-1);i++){
-            if(s.equals(a.getName())){
-                return true;
-            } else {
-                a=a.getFollower();
-            }
-        }
-        return false;
-    }
-
     /* this method returns true if there is a link with the inputted 
      * name in the queue */
     public boolean checknQueue(Node s){
@@ -271,38 +175,6 @@ public class graph
             }
         }
         return false;
-    }
-
-    /*this method returns true if there's a node with the inputted 
-     * name is in the selected array*/
-    public boolean checkNode(ArrayList<Link> aar, String s){
-        boolean yes=true;
-        int x=0;
-        while(yes){
-            if(s.equals(aar.get(x).getNodeA())||s.equals(aar.get(x).getNodeB())){
-                yes=false;
-                return true;
-            } else if(x>=(aar.size()-1)){
-                yes=false;
-                return false;
-            } else if(aar.get(x)==null){
-                yes=false;
-                return false;
-            } else {
-                x++;
-            }
-        }
-        return false; 
-    }
-
-    //basically a getLinks method but it looks through the done arraylist
-    public void findLinksDone(String n){
-        todo.clear();
-        for(int i=0;i<done.size();i++){
-            if(n.equals(done.get(i).getNodeA())|| n.equals(done.get(i).getNodeB())){
-                todo.add(done.get(i));
-            } 
-        }
     }
 
     /*this method adds all the links with the right name 
@@ -332,110 +204,168 @@ public class graph
 
     }
 
-    public boolean checkDoneN(String n){
-        System.out.println("check-n is: "+n);
-        boolean running=true;
+    public void printQueue(){
+        if(nq.queueEmpty()){
+            System.out.println("empty!");
+        }
+        Node n=nq.getFront();
+        for(int i=0;i<nq.len();i++){
+            System.out.println("QUEUE "+i+" : "+n.getName());
+            if(i==nq.len()){
+                System.out.println("end.");
+            } else {
+                n=n.getFollower();
+            }
+        }
+    }
+
+    public boolean everythingComplete(){
         int counter=0;
-        while(running){
-            if(n.equals(doneN.get(counter).getName())){
-
-                System.out.println("check-comparing to: "+doneN.get(counter).getName());
-                running=false;
-                return true;
-            } else if(counter>=doneN.size()-1){
-                System.out.println("check-false");
-                running=false;
-            } else if(doneN.get(counter)==null){
-                System.out.println("check-null.");
-                running=false;
-            }
-            else {
+        for(int i=0;i<nodes.length;i++){
+            if(!nodes[i].checkComplete()){
                 counter++;
+            } else {
+                System.out.println("node: "+nodes[i].getName()+" complete!");
             }
-
+        }
+        if(counter==0){
+            return true;
         }
         return false;
     }
 
-    public int thisCost(String n){
-        for(int i=0;i<doneN.size();i++){
-            if(n==doneN.get(i).getName()){
-                System.out.println("node: "+doneN.get(i).getName()+" cost: "+doneN.get(i).getCost());
-                return doneN.get(i).getCost();
-            }
+    public void resetNodes(){
+        for(int i=0;i<nodes.length;i++){
+            nodes[i].setCost(1000);
+            nodes[i].resetComplete();
+            nodes[i].addFollower(null);
         }
-        return 0;
-    }
-    
-    
+        doneN.clear();
+        todoN.clear();
+        todo.clear();
 
-    public void shortest(String starting){
+        loopy=true;
+    }
+
+    public void algorithm(String starting){
+        resetNodes();
         int num=0;
         baseWeight=0;
-        getNode(starting).setCost(0);
-        getNode(starting).addPrevious(getNode(starting));
-        doneN.add(getNode(starting));
-        Node startingNode;
-        System.out.println("starting node: "+starting);
+        Node startingNode=getNode(starting);
+        startingNode.setCost(0);
+        startingNode.addPrevious(startingNode);
+
+        System.out.println("starting node: "+startingNode.getName());
+        System.out.println("starting cost: "+startingNode.getCost());
 
         while(loopy){
             System.out.println("");
             System.out.println("num is: "+num);
 
-            if(num>0){
-                System.out.println("before dequeue: "+starting);
+            if(num>0 || !nq.queueEmpty()){
                 startingNode=nq.dequeue();
-                starting=startingNode.getName();
-                System.out.println("start before check: "+starting);
-                while(checkDoneN(starting)){
-                    System.out.println("node already done: "+starting);
-                    startingNode=nq.dequeue();
-                    starting=startingNode.getName();
+                System.out.println("startingNode is: "+startingNode.getName());
+                while(startingNode.checkComplete()){
+                    startingNode=startingNode.getFollower();
+                    System.out.println("already complete.");
                 }
             }
-            System.out.println("real starting: "+starting);
+            System.out.println("now starting with: "+startingNode.getName());
 
-            startingNode=getNode(starting);
-            getLinks(starting);
+            getLinks(startingNode.getName());
 
             /*adds the previous node to all the nodes connected to the 'starting' node
             and also adds the weight! and enqueues if it hasn't been processed before*/
             for(int i=0;i<todo.size();i++){
-                System.out.println("i is: "+i); 
-                todoN.add(todo.get(i).getOtherN(starting));
-                System.out.println("todoN adding: "+todoN.get(i).getName());
-                if(!checkDoneN(todoN.get(i).getName())){
-                    todoN.get(i).addPrevious(startingNode);
-                    todoN.get(i).setCost(todo.get(i).getWeight());
+                int currentCost=startingNode.getCost();
+                System.out.println("current cost: "+currentCost);
 
-                    System.out.println("adding previous node ("+startingNode.getName()+") to "+todoN.get(i).getName());
-                    System.out.println("cost: "+todoN.get(i).getCost());
-                    System.out.println("adding on: "+thisCost(starting));
-                    todoN.get(i).addOnCost(thisCost(starting));
+                System.out.println("node a: "+todo.get(i).getNodeA());
+                System.out.println("node b: "+todo.get(i).getNodeB());
+                int nextCost=currentCost+todo.get(i).getWeight();
+                System.out.println("next cost is: "+nextCost);
 
-                    if(!checknQueue(todoN.get(i))){
-                        nq.doEnqueue(todoN.get(i));
-                    } else {
-                        
+                Node otherNode=todo.get(i).getOtherN(startingNode.getName());
+                System.out.println("other node: "+otherNode.getName());
+                int otherCost=otherNode.getCost();
+                System.out.println("other cost: "+otherCost);
+
+                if(nextCost<otherCost){
+                    if(checknQueue(otherNode)){
+                        nq.remove(otherNode);
                     }
-                    System.out.println("enqueueing: "+todoN.get(i).getName());
+                    otherNode.setCost(nextCost);
+                    System.out.println("new other cost: "+otherNode.getCost());
+                    otherNode.addPrevious(startingNode);
+                    System.out.println("adding previous ("+otherNode.getPreviousName()+") to "+otherNode.getName());
+                    System.out.println("enqueueing: "+otherNode.getName());
+                    printQueue();
+                    nq.doEnqueue(otherNode);
+                    System.out.println("---");
+                    printQueue();
                 } else {
-                    System.out.println(todoN.get(i).getName()+" already added.");
+                    System.out.println("already added.");
                 }
             }
+            System.out.println(startingNode.getName()+" is now complete");
+            startingNode.isComplete();
+            doneN.add(startingNode);
             todoN.clear();
             todo.clear();
 
+            for(int i=0;i<doneN.size();i++){
+                System.out.print("---shortest path to: "+doneN.get(i).getName());
+                System.out.println(" is from: "+doneN.get(i).getPreviousName());
+            }
+
             num++;
 
-            if(numberOfNodes-1==doneN.size()){
+            if(everythingComplete()){
                 loopy=false;
             }
         }
         for(int i=0;i<doneN.size();i++){
-            System.out.print("shortest path to: "+doneN.get(i).getName());
-            System.out.println(" is from: "+doneN.get(i).getPreviousName());
+            System.out.print("shortest path to "+doneN.get(i).getName());
+            System.out.print(" is from "+doneN.get(i).getPreviousName());
+            System.out.println(" with cost: "+doneN.get(i).getCost());
         }
+    }
+    
+    public int findNodesDone(Node s){
+        for(int i=0;i<doneN.size();i++){
+            if(s==doneN.get(i)){
+                System.out.println(i+" number in array");
+                return i;
+            }
+        }
+        System.out.println("no node found.");
+        return 0;
+    }
+    
+    public void shortestPath(String start,String end){
+        shortest.clear();
+        boolean running=true;
+        shortest.add(doneN.get((findNodesDone(getNode(end)))));
+        Node endNode=shortest.get(0);
+        System.out.println("adding: "+endNode.getName());
+        while(running){
+           shortest.add(endNode.getPrevious());
+           System.out.println(".adding: "+endNode.getName());
+           endNode=endNode.getPrevious();
+           System.out.println("new end: "+endNode.getName());
+           
+           if(endNode==getNode(start)){
+               System.out.println("---");
+               running=false;
+            }
+           
+        }
+        
+        for(int i=0;i<shortest.size();i++){
+            System.out.println("END: "+shortest.get(i).getName());
+        }
+        
+        
     }
 
 }

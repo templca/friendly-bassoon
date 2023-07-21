@@ -43,9 +43,13 @@ public class nodeQueue<O>
             this.front=box;
             this.end=box;
         } else  if (this.front.getCost() > box.getCost())  {// insert at the front of the queue
+            
             box.addFollower(this.front);
             this.front=box;
-        } else insert(this.front, box); // recursive insert
+        } else {
+           
+            insert(this.front, box); // recursive insert
+        }
     }
 
     // insert into the queue in a recursive manner.
@@ -135,25 +139,27 @@ public class nodeQueue<O>
             System.out.println("in frontof : "+findInFront(removee).getName()+" adding follower: "+removee.getFollowerName());
             findInFront(removee).addFollower(removee.getFollower());
         }
+
     }
 
     public void removeAll(String n){
+        int count=len()+1;
+        System.out.println("count is : "+count);
         Node r=front;
-        for(int i=0;i<len();i++){
+        for(int i=0;i<=count;i++){
+            System.out.println("r name is: "+r.getName()+r.getCost());
             if(n.equals(r.getName())){
-                System.out.println("--removing: "+r.getName()+"("+r.getPreviousName()+")");
+                System.out.println("--removing: "+r.getName()+r.getCost());
                 remove(r);
                 r=front;
-                System.out.println("//r is now: "+r.getName());
-                System.out.println("i is: "+i);
             }
             else {  
                 if(r.getFollower()==null){
-                    System.out.println("nullr is: "+r.getName());
-                    
+                    System.out.println("nullr is: "+r.getName()+r.getCost());
+
                 } else{
-                r=r.getFollower();
-                System.out.println("r is now "+r.getName()); }
+                    r=r.getFollower();
+                    System.out.println("r is now "+r.getName()+r.getCost()); }
                 System.out.println("//i is: "+i);
             }
         }
@@ -184,9 +190,11 @@ public class nodeQueue<O>
         doEnqueue(B);
         doEnqueue(C);
         doEnqueue(D);
+        doEnqueue(E);
+        doEnqueue(F);
+        doEnqueue(G);
 
-        remove(B);
-        
+        removeAll("a");
         System.out.println(len());
 
     }
