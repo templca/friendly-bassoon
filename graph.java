@@ -102,6 +102,7 @@ public class graph
             nodes[i]=new Node(read.getData(0,count));
             nodes[i].setX(Integer.parseInt(read.getData(1,count)));
             nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+            nodes[i].setCost(1000);
             count++;
         }
 
@@ -127,7 +128,6 @@ public class graph
         }
 
     }
-
 
     /*this method takes a string and returns the node with the name of that string*/
     public Node getNode(String n){
@@ -222,9 +222,6 @@ public class graph
         }
     }
 
-    public void pathArray(String start,String end){
-    }
-
     /*this method checks if a link is in done, 
     if its not then it looks at its follower */
     public Link findNextFollower(Link lin){
@@ -241,6 +238,20 @@ public class graph
         Link a =q.getFront();
         for(int i=0;i<=(q.len()-1);i++){
             if(s.equals(a.getName())){
+                return true;
+            } else {
+                a=a.getFollower();
+            }
+        }
+        return false;
+    }
+
+    /* this method returns true if there is a link with the inputted 
+     * name in the queue */
+    public boolean checknQueue(Node s){
+        Node a =nq.getFront();
+        for(int i=0;i<=(nq.len()-1);i++){
+            if(s.equals(a)){
                 return true;
             } else {
                 a=a.getFollower();
@@ -345,35 +356,68 @@ public class graph
         }
         return false;
     }
+
+    public int thisCost(String n){
+        for(int i=0;i<doneN.size();i++){
+            if(n==doneN.get(i).getName()){
+                System.out.println("node: "+doneN.get(i).getName()+" cost: "+doneN.get(i).getCost());
+                return doneN.get(i).getCost();
+            }
+        }
+        return 0;
+    }
     
     
 
     public void shortest(String starting){
+        int num=0;
         baseWeight=0;
         getNode(starting).setCost(0);
         getNode(starting).addPrevious(getNode(starting));
         doneN.add(getNode(starting));
-        Node startingNode=getNode(starting);
-        System.out.println("starting node: "+startingNode.getName());
+        Node startingNode;
+        System.out.println("starting node: "+starting);
 
         while(loopy){
-            nq.removeAll(starting);
+            System.out.println("");
+            System.out.println("num is: "+num);
+
+            if(num>0){
+                System.out.println("before dequeue: "+starting);
+                startingNode=nq.dequeue();
+                starting=startingNode.getName();
+                System.out.println("start before check: "+starting);
+                while(checkDoneN(starting)){
+                    System.out.println("node already done: "+starting);
+                    startingNode=nq.dequeue();
+                    starting=startingNode.getName();
+                }
+            }
+            System.out.println("real starting: "+starting);
+
+            startingNode=getNode(starting);
             getLinks(starting);
 
             /*adds the previous node to all the nodes connected to the 'starting' node
-               and also adds the weight! and enqueues if it hasn't been processed before*/
+            and also adds the weight! and enqueues if it hasn't been processed before*/
             for(int i=0;i<todo.size();i++){
-                System.out.println("i is: "+i);                
+                System.out.println("i is: "+i); 
                 todoN.add(todo.get(i).getOtherN(starting));
-                todoN.get(i).addPrevious(startingNode);
-                todoN.get(i).setCost(todo.get(i).getWeight());
                 System.out.println("todoN adding: "+todoN.get(i).getName());
-                System.out.println("adding previous node ("+startingNode.getName()+") to "+todoN.get(i).getName());
-                System.out.println("cost: "+todoN.get(i).getCost());
-              
                 if(!checkDoneN(todoN.get(i).getName())){
-                    todoN.get(i).addOnCost(baseWeight);
-                    nq.doEnqueue(todoN.get(i));
+                    todoN.get(i).addPrevious(startingNode);
+                    todoN.get(i).setCost(todo.get(i).getWeight());
+
+                    System.out.println("adding previous node ("+startingNode.getName()+") to "+todoN.get(i).getName());
+                    System.out.println("cost: "+todoN.get(i).getCost());
+                    System.out.println("adding on: "+thisCost(starting));
+                    todoN.get(i).addOnCost(thisCost(starting));
+
+                    if(!checknQueue(todoN.get(i))){
+                        nq.doEnqueue(todoN.get(i));
+                    } else {
+                        
+                    }
                     System.out.println("enqueueing: "+todoN.get(i).getName());
                 } else {
                     System.out.println(todoN.get(i).getName()+" already added.");
@@ -381,16 +425,8 @@ public class graph
             }
             todoN.clear();
             todo.clear();
-            Node dummy;
-            dummy=nq.dequeue();
-            doneN.add(dummy);
-            baseWeight=dummy.getCost();
-            starting=dummy.getName();
-            System.out.println("dequeuing: "+dummy.getName());
-            System.out.println("baseWeight is now: "+baseWeight);
-            System.out.println("new starting: "+starting);
-            
-            
+
+            num++;
 
             if(numberOfNodes-1==doneN.size()){
                 loopy=false;
