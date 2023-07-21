@@ -46,15 +46,16 @@ public class window extends JFrame implements ActionListener
             case "quit": System.exit(0);
                 break;
             case "shortest path":
-                dialogTitle="which node to start?";
+                dialogTitle="start node?";
                 DialogBox();
-                System.out.println("remember1 is: "+remember);
                 startNode=remember;
-                
-                dialogTitle="which node to finish?";
+                System.out.println("...start "+startNode);
+
+                dialogTitle="end node?";
                 DialogBox();
-                System.out.println("remember1 is: "+remember);
                 endNode=remember;
+                System.out.println("...end "+endNode);
+
                 paintPath=true;
                 repaint();
                 break;
@@ -76,14 +77,13 @@ public class window extends JFrame implements ActionListener
         Font stringFont = new Font("SansSerif", Font.PLAIN, fontSize );
         g2.setFont( stringFont );
 
-        
         //draws the lines
         for(int j=0;j<=(linkNumber-1);j++){
             g2.setColor(Color.BLUE);
-            int startX=findNodeCoordinate("x",data.getFromLink(j,true));
-            int startY=findNodeCoordinate("y",data.getFromLink(j,true));
-            int endX=findNodeCoordinate("x",data.getFromLink(j,false));
-            int endY=findNodeCoordinate("y",data.getFromLink(j,false));
+            int startX=findNodeCoordinate(true,data.getFromLink(j,true));
+            int startY=findNodeCoordinate(false,data.getFromLink(j,true));
+            int endX=findNodeCoordinate(true,data.getFromLink(j,false));
+            int endY=findNodeCoordinate(false,data.getFromLink(j,false));
 
             int lineWeight=data.getLinkWeight(j);
             g2.setStroke(new BasicStroke(lineWeight));
@@ -106,22 +106,55 @@ public class window extends JFrame implements ActionListener
         }
 
         if(paintPath){
-            data.shortestPath("s");
-            data.pathArray(startNode,endNode);
+            System.out.println("--starting node: "+startNode);
+            System.out.println("--end node: "+endNode);
+            data.algorithm(startNode);
+            data.shortestPath(startNode,endNode);
+            //draws the lines blue
+            for(int j=0;j<=(linkNumber-1);j++){
+                g2.setColor(Color.BLUE);
+                int startX=findNodeCoordinate(true,data.getFromLink(j,true));
+                int startY=findNodeCoordinate(false,data.getFromLink(j,true));
+                int endX=findNodeCoordinate(true,data.getFromLink(j,false));
+                int endY=findNodeCoordinate(false,data.getFromLink(j,false));
 
-            //drawing lines
-            for(int i=0;i<data.doneSize();i++){
-                //int startX =findNodeCoordinate("x",data.getFromShortest(i,true));
-                //int startY =findNodeCoordinate("y",data.getFromShortest(i,true));
+                int lineWeight=data.getLinkWeight(j);
+                g2.setStroke(new BasicStroke(lineWeight));
+                Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
+                g2.draw(lin);
+            }
 
-                //int endX =findNodeCoordinate("x",data.getFromShortest(i,false));
-                //int endY =findNodeCoordinate("y",data.getFromShortest(i,false));
+            //drawing lines red
+            for(int i=0;i<data.shortestSize();i++){
+                int startX =findNodeCoordinate(true,data.getFromShortest(i));
+                int startY =findNodeCoordinate(false,data.getFromShortest(i));
+                System.out.println("start x: "+startX);
+                System.out.println("start y: "+startY);
+
+                int endX =findNodeCoordinate(true,data.getPFShortest(i));
+                int endY =findNodeCoordinate(false,data.getPFShortest(i));
+                System.out.println("end x: "+endX);
+                System.out.println("end y: "+endY);
                 int lineWeight=data.getLinkWeight(i);
                 g2.setColor(Color.RED);
                 g2.setStroke(new BasicStroke(lineWeight));
-                //Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
-                //g2.draw(lin);
+                Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
+                g2.draw(lin);
 
+            }
+
+            //draws nodes and gives them the names
+            for(int i=0;i<=(nodeNumber-1);i++){
+                g2.setColor(Color.BLACK);
+                x=data.getCoordinate(i,true);
+                y=data.getCoordinate(i,false);
+                g2.fillOval(x,y,circleSize,circleSize);
+                x1=x+(circleSize/2)-centering;
+                y1=y+(circleSize/2);
+                g2.setColor(Color.WHITE);
+                g2.drawString(data.getNodeName(i),x1,y1+centering);
+
+                b++;
             }
         }
 
@@ -134,14 +167,14 @@ public class window extends JFrame implements ActionListener
         remember=box.getText();
     }
 
-    public int findNodeCoordinate(String coordinate, String a){
-        if(coordinate=="x"){
+    public int findNodeCoordinate(boolean X, String a){
+        if(X){
             for(int i=0;i<=(nodeNumber);i++){
                 if(a.equals(data.getNodeName(i))){
                     return data.getCoordinate(i,true);
                 }
             }
-        }else if(coordinate=="y"){
+        }else {
             for(int i=0;i<=(nodeNumber);i++){
                 if(a.equals(data.getNodeName(i))){
                     return data.getCoordinate(i,false);
