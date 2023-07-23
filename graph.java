@@ -210,7 +210,8 @@ public class graph
         }
         Node n=nq.getFront();
         for(int i=0;i<nq.len();i++){
-            System.out.println("QUEUE "+i+" : "+n.getName());
+            System.out.print("QUEUE "+i+" : "+n.getName());
+            System.out.println(" with a cost of "+n.getCost());
             if(i==nq.len()){
                 System.out.println("end.");
             } else {
@@ -265,8 +266,8 @@ public class graph
             if(num>0 || !nq.queueEmpty()){
                 startingNode=nq.dequeue();
                 System.out.println("startingNode is: "+startingNode.getName());
-                while(startingNode.checkComplete()){
-                    startingNode=startingNode.getFollower();
+                while(startingNode.checkComplete() && !nq.queueEmpty()){
+                    startingNode=nq.dequeue();
                     System.out.println("already complete.");
                 }
             }
@@ -277,6 +278,7 @@ public class graph
             /*adds the previous node to all the nodes connected to the 'starting' node
             and also adds the weight! and enqueues if it hasn't been processed before*/
             for(int i=0;i<todo.size();i++){
+                System.out.println("todo size: "+todo.size());
                 int currentCost=startingNode.getCost();
                 System.out.println("current cost: "+currentCost);
 
@@ -291,9 +293,6 @@ public class graph
                 System.out.println("other cost: "+otherCost);
 
                 if(nextCost<otherCost){
-                    if(checknQueue(otherNode)){
-                        nq.remove(otherNode);
-                    }
                     otherNode.setCost(nextCost);
                     System.out.println("new other cost: "+otherNode.getCost());
                     otherNode.addPrevious(startingNode);
