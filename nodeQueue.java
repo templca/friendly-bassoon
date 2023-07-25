@@ -131,10 +131,12 @@ public class nodeQueue<O>
 
     public void remove(Node removee){
         if(removee==front){
+            System.out.println("dequeueing.. "+removee.getName());
             dequeue();
-        }else if (removee==end){
+        }else if (removee==end || removee.getFollower()==null){
             System.out.println("removee is at the end of queue,");
             findInFront(removee).addFollower(null);
+            end=findInFront(removee);
         } else {
             System.out.println("in frontof : "+findInFront(removee).getName()+" adding follower: "+removee.getFollowerName());
             findInFront(removee).addFollower(removee.getFollower());

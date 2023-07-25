@@ -31,10 +31,13 @@ public class window extends JFrame implements ActionListener
     int y1;
     int fontSize=25;
     boolean paintPath=false;
+    boolean graphImported=false;
     String remember;
     String dialogTitle;
     String startNode;
     String endNode;
+    String errorMessage="error has occured";
+    String dialogText;
 
     graph data=new graph();
     public void actionPerformed(ActionEvent e) {
@@ -47,16 +50,41 @@ public class window extends JFrame implements ActionListener
                 break;
             case "shortest path":
                 dialogTitle="start node?";
-                DialogBox();
+                InDialogBox();
                 startNode=remember;
                 System.out.println("...start "+startNode);
 
                 dialogTitle="end node?";
-                DialogBox();
+                InDialogBox();
                 endNode=remember;
                 System.out.println("...end "+endNode);
-
-                paintPath=true;
+                data.checkingAlgorithm(startNode);
+                if(data.hasGraphError()){
+                    dialogTitle="error";
+                    dialogText=errorMessage+" starting node not recognised";
+                    DialogBox();
+                } else{
+                    paintPath=true;
+                    repaint();
+                }
+                break;
+            case "import file": 
+                dialogTitle="file name?";
+                InDialogBox();
+                data.setFileName(remember);
+                if(data.hasGraphError()){
+                    dialogTitle="error";
+                    dialogText=errorMessage+" in graph class";
+                    DialogBox();
+                } else if (data.hasFileError()){
+                    dialogTitle="error";
+                    dialogText=errorMessage+" in reading file";
+                    DialogBox();
+                }
+                System.out.println("file name set to: "+remember);
+                nodeNumber=data.getNodeNumber();
+                linkNumber=data.getLinkNumber();
+                graphImported=true;
                 repaint();
                 break;
         }
@@ -77,39 +105,47 @@ public class window extends JFrame implements ActionListener
         Font stringFont = new Font("SansSerif", Font.PLAIN, fontSize );
         g2.setFont( stringFont );
 
-        //draws the lines
-        for(int j=0;j<=(linkNumber-1);j++){
-            g2.setColor(Color.BLUE);
-            int startX=findNodeCoordinate(true,data.getFromLink(j,true));
-            int startY=findNodeCoordinate(false,data.getFromLink(j,true));
-            int endX=findNodeCoordinate(true,data.getFromLink(j,false));
-            int endY=findNodeCoordinate(false,data.getFromLink(j,false));
+        if(graphImported){
+            //draws the lines
+            for(int j=0;j<=(linkNumber-1);j++){
+                g2.setColor(Color.BLUE);
+                int startX=findNodeCoordinate(true,data.getFromLink(j,true));
+                int startY=findNodeCoordinate(false,data.getFromLink(j,true));
+                int endX=findNodeCoordinate(true,data.getFromLink(j,false));
+                int endY=findNodeCoordinate(false,data.getFromLink(j,false));
 
-            int lineWeight=data.getLinkWeight(j);
-            g2.setStroke(new BasicStroke(lineWeight));
-            Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
-            g2.draw(lin);
-        }
+                int lineWeight=data.getLinkWeight(j);
+                g2.setStroke(new BasicStroke(lineWeight));
+                Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
+                g2.draw(lin);
+            }
 
-        //draws nodes and gives them the names
-        for(int i=0;i<=(nodeNumber-1);i++){
-            g2.setColor(Color.BLACK);
-            x=data.getCoordinate(i,true);
-            y=data.getCoordinate(i,false);
-            g2.fillOval(x,y,circleSize,circleSize);
-            x1=x+(circleSize/2)-centering;
-            y1=y+(circleSize/2);
-            g2.setColor(Color.WHITE);
-            g2.drawString(data.getNodeName(i),x1,y1+centering);
+            //draws nodes and gives them the names
+            for(int i=0;i<=(nodeNumber-1);i++){
+                g2.setColor(Color.BLACK);
+                x=data.getCoordinate(i,true);
+                y=data.getCoordinate(i,false);
+                g2.fillOval(x,y,circleSize,circleSize);
+                x1=x+(circleSize/2)-centering;
+                y1=y+(circleSize/2);
+                g2.setColor(Color.WHITE);
+                g2.drawString(data.getNodeName(i),x1,y1+centering);
 
-            b++;
+                b++;
+            }
         }
 
         if(paintPath){
             System.out.println("--starting node: "+startNode);
             System.out.println("--end node: "+endNode);
-            data.algorithm(startNode);
-            data.shortestPath(startNode,endNode);
+            data.checkingPath(startNode,endNode);
+            if(data.hasGraphError()){
+                dialogTitle="error";
+                    dialogText=errorMessage+" end node not recognised";
+                    DialogBox();
+            }
+            
+                
             //draws the lines blue
             for(int j=0;j<=(linkNumber-1);j++){
                 g2.setColor(Color.BLUE);
@@ -151,7 +187,7 @@ public class window extends JFrame implements ActionListener
                 g2.fillOval(x,y,circleSize,circleSize);
                 x1=x+(circleSize/2)-centering;
                 y1=y+(circleSize/2);
-                g2.setColor(Color.WHITE);
+                g2.setColor(Color.RED);
                 g2.drawString(data.getNodeName(i),x1,y1+centering);
 
                 b++;
@@ -161,6 +197,22 @@ public class window extends JFrame implements ActionListener
     }
 
     public void DialogBox(){
+        int length=dialogText.length()*5+50;
+        System.out.println("length of dialog box: "+length);
+        JDialog box = new JDialog(this);
+        box.setBounds(400,400,length,100);
+
+        TextArea area = new TextArea(dialogText);
+        box.add(area);
+        area.setEditable(false);
+
+        box.toFront();
+        box.setVisible(true);
+        box.setTitle(dialogTitle);
+
+    }
+
+    public void InDialogBox(){
         intputDialog box = new intputDialog(dialogTitle);
         box.setLocationRelativeTo(this);
         box.setVisible(true);
@@ -201,9 +253,6 @@ public class window extends JFrame implements ActionListener
     public window()
     {
         // initialise instance variables
-        data.initialise();
-        nodeNumber=data.getNodeNumber();
-        linkNumber=data.getLinkNumber();
 
         setTitle("djikstra");
         this.getContentPane().setPreferredSize(new Dimension(700,700));
@@ -229,6 +278,10 @@ public class window extends JFrame implements ActionListener
         menu.add(menuItem);
 
         menuItem=new JMenuItem("shortest path");
+        menuItem.addActionListener(this);
+        menu.add(menuItem);
+
+        menuItem=new JMenuItem("import file");
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
