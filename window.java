@@ -113,11 +113,21 @@ public class window extends JFrame implements ActionListener
                 int startY=findNodeCoordinate(false,data.getFromLink(j,true));
                 int endX=findNodeCoordinate(true,data.getFromLink(j,false));
                 int endY=findNodeCoordinate(false,data.getFromLink(j,false));
+                System.out.println("start x: "+startX+" start y: "+startY);
+                System.out.println("end x: "+endX+" end y: "+endY);
 
                 int lineWeight=data.getLinkWeight(j);
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
+                
+                String weightText=Integer.toString(data.getLinkWeight(j));
+                System.out.println("weight text; "+weightText);
+                float y=findCenter(startY,endY);
+                System.out.println("y; "+y);
+                float x=findCenter(startX,endX);
+                System.out.println("x; "+x);
+                g2.drawString(weightText,x,y);
             }
 
             //draws nodes and gives them the names
@@ -125,14 +135,19 @@ public class window extends JFrame implements ActionListener
                 g2.setColor(Color.BLACK);
                 x=data.getCoordinate(i,true);
                 y=data.getCoordinate(i,false);
+                System.out.println("x: "+x+" y: "+y);
                 g2.fillOval(x,y,circleSize,circleSize);
                 x1=x+(circleSize/2)-centering;
                 y1=y+(circleSize/2);
                 g2.setColor(Color.WHITE);
                 g2.drawString(data.getNodeName(i),x1,y1+centering);
+                
+                
 
                 b++;
             }
+            
+            
         }
 
         if(paintPath){
@@ -187,13 +202,25 @@ public class window extends JFrame implements ActionListener
                 g2.fillOval(x,y,circleSize,circleSize);
                 x1=x+(circleSize/2)-centering;
                 y1=y+(circleSize/2);
+                if(data.checkShortest(data.getNodeName(i))){
                 g2.setColor(Color.RED);
                 g2.drawString(data.getNodeName(i),x1,y1+centering);
+            } else {
+                g2.setColor(Color.WHITE);
+                g2.drawString(data.getNodeName(i),x1,y1+centering);
+            }
 
                 b++;
             }
         }
 
+    }
+    
+    public float findCenter(int start, int end){
+        float number=end-start;
+        number=number/2;
+        
+        return start+number+50;
     }
 
     public void DialogBox(){

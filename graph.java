@@ -41,11 +41,11 @@ public class graph
         nq = new nodeQueue();
 
     }
-    
+
     public boolean hasGraphError(){
         return graphError;
     }
-    
+
     public boolean hasFileError(){
         return read.hasErrorOccurred();
     }
@@ -70,6 +70,15 @@ public class graph
     public String getPFShortest(int n){
         System.out.println("from p, node: "+shortest.get(n).getPreviousName());
         return shortest.get(n).getPreviousName();
+    }
+    
+    public boolean checkShortest(String n){
+        for(int i=0;i<shortest.size();i++){
+            if(n.equals(shortest.get(i).getName())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setFileName(String name){
@@ -117,44 +126,44 @@ public class graph
 
     //reads from file
     public void initialise(){
-        
-            resetInitialise();
-            numberOfNodes=Integer.parseInt(read.getData(0,0));
-            numberOfLinks=(read.getLines()-(numberOfNodes+1));
-            l = new Link[numberOfLinks];
-            nodes = new Node[numberOfNodes];
-            int count=1;
-            for (int i=0;i<=(numberOfNodes-1);i++){
 
-                nodes[i]=new Node(read.getData(0,count));
-                nodes[i].setX(Integer.parseInt(read.getData(1,count)));
-                nodes[i].setY(Integer.parseInt(read.getData(2,count)));
-                nodes[i].setCost(1000);
-                count++;
+        resetInitialise();
+        numberOfNodes=Integer.parseInt(read.getData(0,0));
+        numberOfLinks=(read.getLines()-(numberOfNodes+1));
+        l = new Link[numberOfLinks];
+        nodes = new Node[numberOfNodes];
+        int count=1;
+        for (int i=0;i<=(numberOfNodes-1);i++){
+
+            nodes[i]=new Node(read.getData(0,count));
+            nodes[i].setX(Integer.parseInt(read.getData(1,count)));
+            nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+            nodes[i].setCost(1000);
+            count++;
+        }
+
+        for (int i=0;i<=(numberOfLinks-1);i++){
+            l[i]=new Link();
+        }
+
+        num=1+numberOfNodes;
+
+        for (int i=0;i<=(numberOfLinks-1);i++){
+            weight=Integer.parseInt(read.getData(2,num));
+            l[i].addWeight(weight);
+
+            nodeName=read.getData(0,num);
+            for (int j=0;j<=(numberOfNodes-1);j++){
+                l[i].addLinkA(getNode(nodeName));
+            }
+            String nodeName1=read.getData(1,num);
+            for (int j=0;j<=(numberOfNodes-1);j++){
+                l[i].addLinkB(getNode(nodeName1));
             }
 
-            for (int i=0;i<=(numberOfLinks-1);i++){
-                l[i]=new Link();
-            }
+            num++;
+        }
 
-            num=1+numberOfNodes;
-
-            for (int i=0;i<=(numberOfLinks-1);i++){
-                weight=Integer.parseInt(read.getData(2,num));
-                l[i].addWeight(weight);
-
-                nodeName=read.getData(0,num);
-                for (int j=0;j<=(numberOfNodes-1);j++){
-                    l[i].addLinkA(getNode(nodeName));
-                }
-                String nodeName1=read.getData(1,num);
-                for (int j=0;j<=(numberOfNodes-1);j++){
-                    l[i].addLinkB(getNode(nodeName1));
-                }
-
-                num++;
-            }
-        
     }
 
     /*this method takes a string and returns the node with the name of that string*/
@@ -186,7 +195,7 @@ public class graph
                 a=a.getFollower();
             }
         }
-        System.out.println("node not found.");
+        System.out.println("node not found in queue.");
         return false;
     }
 
@@ -273,7 +282,7 @@ public class graph
 
         loopy=true;
     }
-    
+
     public boolean checkNode(String s){
         for(int i=0;i<nodes.length;i++){
             if(s.equals(nodes[i].getName())){
@@ -282,7 +291,7 @@ public class graph
         }
         return false;
     }
-    
+
     public void checkingAlgorithm(String start){
         if(checkNode(start)){
             algorithm(start);
@@ -304,15 +313,6 @@ public class graph
         System.out.println("starting cost: "+startingNode.getCost());
 
         while(loopy){
-            System.out.println(startingNode.getName()+" is now complete");
-            startingNode.isComplete();
-            doneN.add(startingNode);
-            todo.clear();
-
-            if(everythingComplete()){
-                loopy=false;
-            }
-
             System.out.println("");
             System.out.println("num is: "+num);
 
@@ -320,7 +320,7 @@ public class graph
                 startingNode=nq.dequeue();
                 System.out.println("startingNode is: "+startingNode.getName());
                 while(startingNode.checkComplete() && !nq.queueEmpty()){
-                    startingNode=nq.dequeue();
+                    startingNode=startingNode.getFollower();
                     System.out.println("already complete.");
                 }
             }
@@ -331,8 +331,6 @@ public class graph
             /*adds the previous node to all the nodes connected to the 'starting' node
             and also adds the weight! and enqueues if it hasn't been processed before*/
             for(int i=0;i<todo.size();i++){
-
-                System.out.println("todo size: "+todo.size());
                 int currentCost=startingNode.getCost();
                 System.out.println("current cost: "+currentCost);
 
@@ -347,10 +345,6 @@ public class graph
                 System.out.println("other cost: "+otherCost);
 
                 if(nextCost<otherCost){
-                    /*if(checknQueue(startingNode)){
-                    System.out.println(".removing; "+startingNode.getName());
-                    nq.remove(startingNode);
-                    } */
                     otherNode.setCost(nextCost);
                     System.out.println("new other cost: "+otherNode.getCost());
                     otherNode.addPrevious(startingNode);
@@ -360,6 +354,8 @@ public class graph
                     nq.doEnqueue(otherNode);
                     System.out.println("---");
                     printQueue();
+                } else if (nextCost==otherCost){
+                    System.out.println("path is the same length.");
                 } else {
                     System.out.println("already added.");
                 }
@@ -379,6 +375,7 @@ public class graph
             if(everythingComplete()){
                 loopy=false;
             }
+
         }
         for(int i=0;i<doneN.size();i++){
             System.out.print("shortest path to "+doneN.get(i).getName());
@@ -397,7 +394,7 @@ public class graph
         System.out.println("no node found.");
         return 0;
     }
-    
+
     public void checkingPath(String start,String end){
         if(checkNode(start) && checkNode(end)){
             shortestPath(start, end);
