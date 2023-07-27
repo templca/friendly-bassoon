@@ -131,18 +131,12 @@ public class nodeQueue<O>
 
     public void remove(Node removee){
         if(removee==front){
-            System.out.println("dequeueing.. "+removee.getName());
             dequeue();
-        }else if (removee==end){
+            System.out.println("dequeueing: "+removee.getName());
+        }else if (removee==end || removee.getFollower()==null){
             System.out.println("removee is at the end of queue,");
             findInFront(removee).addFollower(null);
-            end=findInFront(removee);
-        } else if (removee.getFollower()==null){
-            System.out.println("null removee is at the end of queue,");
-            findInFront(removee).addFollower(null);
-            end=findInFront(removee);
-        }
-        else {
+        } else {
             System.out.println("in frontof : "+findInFront(removee).getName()+" adding follower: "+removee.getFollowerName());
             findInFront(removee).addFollower(removee.getFollower());
         }
@@ -204,10 +198,6 @@ public class nodeQueue<O>
         removeAll("a");
         System.out.println(len());
 
-    }
-    
-    public Node getEnd(){
-        return end;
     }
 
 }

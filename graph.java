@@ -67,11 +67,15 @@ public class graph
         return shortest.get(n).getName();
     }
 
+    public Node getNodeShortest(int n){
+        return shortest.get(n);
+    }
+
     public String getPFShortest(int n){
         System.out.println("from p, node: "+shortest.get(n).getPreviousName());
         return shortest.get(n).getPreviousName();
     }
-    
+
     public boolean checkShortest(String n){
         for(int i=0;i<shortest.size();i++){
             if(n.equals(shortest.get(i).getName())){
@@ -81,6 +85,18 @@ public class graph
         return false;
     }
 
+    public void test(){
+        setFileName("data2.csv");
+        checkingAlgorithm("s");
+        shortestPath("s","d");
+        Link n=findLink(shortest.get(0));
+        System.out.println("link found is: "+n.getName());
+    }
+
+    public int getSCost(int n){
+        return shortest.get(n).getCost();
+    }
+
     public void setFileName(String name){
         read.setFile(name);
         if(read.hasErrorOccurred()){
@@ -88,6 +104,26 @@ public class graph
         } else {
             initialise();
         }
+    }
+
+    public Link findLink(Node n){
+        System.out.println("node name is: "+n.getName());
+        System.out.println("previous is is: "+n.getPreviousName());
+        for(int i=0;i<l.length;i++){
+            if(n.getName().equals(l[i].getNodeA()) || n.getName().equals(l[i].getNodeB())){
+                System.out.println("node matches.");
+                System.out.println("node  A is: "+l[i].getNodeA());
+                System.out.println("node  B is: "+l[i].getNodeB());
+                if(n.getPreviousName().equals(l[i].getNodeA()) || n.getPreviousName().equals(l[i].getNodeB())){
+                    System.out.println("node  A is: "+l[i].getNodeA());
+                    System.out.println("node  B is: "+l[i].getNodeB());
+                    System.out.println("previous matches");
+                    return l[i];
+                }
+            }
+            System.out.println("not a match");
+        }
+        return null;
     }
 
     public String getFromLink(int i,boolean A){
@@ -345,6 +381,10 @@ public class graph
                 System.out.println("other cost: "+otherCost);
 
                 if(nextCost<otherCost){
+                    if(checknQueue(otherNode)){
+                        nq.remove(otherNode);
+                        System.out.println("removing..: "+otherNode.getName()+" cost; "+otherNode.getCost());
+                    }
                     otherNode.setCost(nextCost);
                     System.out.println("new other cost: "+otherNode.getCost());
                     otherNode.addPrevious(startingNode);

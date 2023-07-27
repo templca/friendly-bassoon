@@ -108,7 +108,7 @@ public class window extends JFrame implements ActionListener
         if(graphImported){
             //draws the lines
             for(int j=0;j<=(linkNumber-1);j++){
-                g2.setColor(Color.BLUE);
+                g2.setColor(Color.DARK_GRAY);
                 int startX=findNodeCoordinate(true,data.getFromLink(j,true));
                 int startY=findNodeCoordinate(false,data.getFromLink(j,true));
                 int endX=findNodeCoordinate(true,data.getFromLink(j,false));
@@ -120,14 +120,14 @@ public class window extends JFrame implements ActionListener
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
-                
+
                 String weightText=Integer.toString(data.getLinkWeight(j));
                 System.out.println("weight text; "+weightText);
                 float y=findCenter(startY,endY);
                 System.out.println("y; "+y);
                 float x=findCenter(startX,endX);
                 System.out.println("x; "+x);
-                g2.drawString(weightText,x,y);
+                g2.drawString(weightText,x+10,y+10);
             }
 
             //draws nodes and gives them the names
@@ -141,29 +141,24 @@ public class window extends JFrame implements ActionListener
                 y1=y+(circleSize/2);
                 g2.setColor(Color.WHITE);
                 g2.drawString(data.getNodeName(i),x1,y1+centering);
-                
-                
 
                 b++;
             }
-            
-            
-        }
 
+        }
         if(paintPath){
             System.out.println("--starting node: "+startNode);
             System.out.println("--end node: "+endNode);
             data.checkingPath(startNode,endNode);
             if(data.hasGraphError()){
                 dialogTitle="error";
-                    dialogText=errorMessage+" end node not recognised";
-                    DialogBox();
+                dialogText=errorMessage+" end node not recognised";
+                DialogBox();
             }
-            
-                
+
             //draws the lines blue
             for(int j=0;j<=(linkNumber-1);j++){
-                g2.setColor(Color.BLUE);
+                g2.setColor(Color.DARK_GRAY);
                 int startX=findNodeCoordinate(true,data.getFromLink(j,true));
                 int startY=findNodeCoordinate(false,data.getFromLink(j,true));
                 int endX=findNodeCoordinate(true,data.getFromLink(j,false));
@@ -186,11 +181,17 @@ public class window extends JFrame implements ActionListener
                 int endY =findNodeCoordinate(false,data.getPFShortest(i));
                 System.out.println("end x: "+endX);
                 System.out.println("end y: "+endY);
-                int lineWeight=data.getLinkWeight(i);
+                
+                Link linkNumber=data.findLink(data.getNodeShortest(i));
+                System.out.println("link found: "+linkNumber.getName());
+                int lineWeight=linkNumber.getWeight();
+                System.out.println("link weight: "+lineWeight);
                 g2.setColor(Color.RED);
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
+                
+                
 
             }
 
@@ -203,24 +204,30 @@ public class window extends JFrame implements ActionListener
                 x1=x+(circleSize/2)-centering;
                 y1=y+(circleSize/2);
                 if(data.checkShortest(data.getNodeName(i))){
-                g2.setColor(Color.RED);
-                g2.drawString(data.getNodeName(i),x1,y1+centering);
-            } else {
-                g2.setColor(Color.WHITE);
-                g2.drawString(data.getNodeName(i),x1,y1+centering);
-            }
+                    g2.setColor(Color.WHITE);
+                    g2.drawString(data.getNodeName(i),x1,y1+centering);
+                } else {
+                    g2.setColor(Color.WHITE);
+                    g2.drawString(data.getNodeName(i),x1,y1+centering);
+                }
 
                 b++;
+            }
+            
+            for(int i=0;i<data.shortest.size();i++){
+                String text;
+                text=data.shortest.get(i).getName()+" comes from "+data.shortest.get(i).getPreviousName()+" with a cost of "+data.shortest.get(i).getCost();
+                
             }
         }
 
     }
-    
+
     public float findCenter(int start, int end){
         float number=end-start;
         number=number/2;
-        
-        return start+number+50;
+
+        return start+number+40;
     }
 
     public void DialogBox(){
@@ -313,5 +320,6 @@ public class window extends JFrame implements ActionListener
         menu.add(menuItem);
 
         this.pack();
+        repaint();
     }
 }
