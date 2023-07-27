@@ -38,17 +38,16 @@ public class window extends JFrame implements ActionListener
     String endNode;
     String errorMessage="error has occured";
     String dialogText;
+    String weightButton;
+    boolean weightsOn=true;
 
     graph data=new graph();
     public void actionPerformed(ActionEvent e) {
         String cmd=e.getActionCommand(); 
         switch (cmd) {
-            case "add node": 
-                repaint();
+            case "Quit": System.exit(0);
                 break;
-            case "quit": System.exit(0);
-                break;
-            case "shortest path":
+            case "Shortest Path":
                 dialogTitle="start node?";
                 InDialogBox();
                 startNode=remember;
@@ -68,7 +67,7 @@ public class window extends JFrame implements ActionListener
                     repaint();
                 }
                 break;
-            case "import file": 
+            case "Import File": 
                 dialogTitle="file name?";
                 InDialogBox();
                 data.setFileName(remember);
@@ -87,6 +86,7 @@ public class window extends JFrame implements ActionListener
                 graphImported=true;
                 repaint();
                 break;
+            
         }
     }
 
@@ -121,13 +121,16 @@ public class window extends JFrame implements ActionListener
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
 
+                    System.out.println("weights printing");
+                g2.setColor(Color.DARK_GRAY);
                 String weightText=Integer.toString(data.getLinkWeight(j));
                 System.out.println("weight text; "+weightText);
                 float y=findCenter(startY,endY);
                 System.out.println("y; "+y);
                 float x=findCenter(startX,endX);
                 System.out.println("x; "+x);
-                g2.drawString(weightText,x+10,y+10);
+                g2.drawString(weightText,x+10,y-10);
+            
             }
 
             //draws nodes and gives them the names
@@ -227,7 +230,7 @@ public class window extends JFrame implements ActionListener
         float number=end-start;
         number=number/2;
 
-        return start+number+40;
+        return start+number+50;
     }
 
     public void DialogBox(){
@@ -302,20 +305,21 @@ public class window extends JFrame implements ActionListener
 
         menu = new JMenu("File");
         menuBar.add(menu);
-
-        menuItem=new JMenuItem("add node");
+        
+        menuItem=new JMenuItem("Import File");
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
-        menuItem=new JMenuItem("quit");
+        menuItem=new JMenuItem("Quit");
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
-        menuItem=new JMenuItem("shortest path");
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
-
-        menuItem=new JMenuItem("import file");
+        
+        
+        menu = new JMenu("Play");
+        menuBar.add(menu);
+        
+        menuItem=new JMenuItem("Shortest Path");
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
