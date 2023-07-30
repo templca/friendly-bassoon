@@ -38,8 +38,6 @@ public class window extends JFrame implements ActionListener
     String endNode;
     String errorMessage="error has occured";
     String dialogText;
-    String weightButton;
-    boolean weightsOn=true;
 
     graph data=new graph();
     public void actionPerformed(ActionEvent e) {
@@ -86,6 +84,8 @@ public class window extends JFrame implements ActionListener
                 graphImported=true;
                 repaint();
                 break;
+                
+                
             
         }
     }
@@ -99,10 +99,11 @@ public class window extends JFrame implements ActionListener
     public void paint (Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
-        int circleSize=100;
+        int circleSize=80;
         int centering=5;
         int b=1;
         Font stringFont = new Font("SansSerif", Font.PLAIN, fontSize );
+        Font numberFont = new Font("SansSerif", Font.PLAIN, fontSize-5 );
         g2.setFont( stringFont );
 
         if(graphImported){
@@ -120,6 +121,8 @@ public class window extends JFrame implements ActionListener
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
+                
+                g2.setFont( numberFont );
 
                     System.out.println("weights printing");
                 g2.setColor(Color.DARK_GRAY);
@@ -129,12 +132,13 @@ public class window extends JFrame implements ActionListener
                 System.out.println("y; "+y);
                 float x=findCenter(startX,endX);
                 System.out.println("x; "+x);
-                g2.drawString(weightText,x+10,y-10);
+                g2.drawString(weightText,x+5,y-10);
             
             }
 
             //draws nodes and gives them the names
             for(int i=0;i<=(nodeNumber-1);i++){
+                g2.setFont( stringFont );
                 g2.setColor(Color.BLACK);
                 x=data.getCoordinate(i,true);
                 y=data.getCoordinate(i,false);
@@ -222,6 +226,7 @@ public class window extends JFrame implements ActionListener
                 text=data.shortest.get(i).getName()+" comes from "+data.shortest.get(i).getPreviousName()+" with a cost of "+data.shortest.get(i).getCost();
                 
             }
+            paintPath=false;
         }
 
     }
@@ -320,6 +325,10 @@ public class window extends JFrame implements ActionListener
         menuBar.add(menu);
         
         menuItem=new JMenuItem("Shortest Path");
+        menuItem.addActionListener(this);
+        menu.add(menuItem);
+        
+        menuItem=new JMenuItem("make bigger");
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
