@@ -106,7 +106,7 @@ public class window extends JFrame implements ActionListener
         Font numberFont = new Font("SansSerif", Font.PLAIN, fontSize-5 );
         g2.setFont( stringFont );
 
-        if(graphImported){
+        if(graphImported && !data.hasGraphError()){
             //draws the lines
             for(int j=0;j<=(linkNumber-1);j++){
                 g2.setColor(Color.DARK_GRAY);
@@ -132,7 +132,7 @@ public class window extends JFrame implements ActionListener
                 System.out.println("y; "+y);
                 float x=findCenter(startX,endX);
                 System.out.println("x; "+x);
-                g2.drawString(weightText,x+5,y-10);
+                g2.drawString(weightText,x+7,y+7);
             
             }
 
@@ -152,6 +152,7 @@ public class window extends JFrame implements ActionListener
                 b++;
             }
 
+            graphImported=false;
         }
         if(paintPath){
             System.out.println("--starting node: "+startNode);
@@ -325,10 +326,6 @@ public class window extends JFrame implements ActionListener
         menuBar.add(menu);
         
         menuItem=new JMenuItem("Shortest Path");
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
-        
-        menuItem=new JMenuItem("make bigger");
         menuItem.addActionListener(this);
         menu.add(menuItem);
 

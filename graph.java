@@ -163,6 +163,7 @@ public class graph
     //reads from file
     public void initialise(){
 
+        graphError=false;
         resetInitialise();
         numberOfNodes=Integer.parseInt(read.getData(0,0));
         numberOfLinks=(read.getLines()-(numberOfNodes+1));
@@ -171,34 +172,53 @@ public class graph
         int count=1;
         for (int i=0;i<=(numberOfNodes-1);i++){
 
-            nodes[i]=new Node(read.getData(0,count));
-            nodes[i].setX(Integer.parseInt(read.getData(1,count)));
-            nodes[i].setY(Integer.parseInt(read.getData(2,count)));
-            nodes[i].setCost(1000);
+            //if there is a gap in the file being read, then 
+            if(read.getData(0,count)==null || read.getData(2,count)==null || read.getData(1,count)==null){
+                graphError=true;
+                System.out.println("graph error");
+            }else {
+                nodes[i]=new Node(read.getData(0,count));
+                System.out.println("addincg node: "+nodes[i].getName());
+                nodes[i].setX(Integer.parseInt(read.getData(1,count)));
+                nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+                System.out.println("coordinates: "+nodes[i].getX()+" , "+nodes[i].getY());
+                nodes[i].setCost(1000);
+
+            }
             count++;
         }
 
-        for (int i=0;i<=(numberOfLinks-1);i++){
-            l[i]=new Link();
-        }
+        if(!graphError){
 
-        num=1+numberOfNodes;
-
-        for (int i=0;i<=(numberOfLinks-1);i++){
-            weight=Integer.parseInt(read.getData(2,num));
-            l[i].addWeight(weight);
-
-            nodeName=read.getData(0,num);
-            for (int j=0;j<=(numberOfNodes-1);j++){
-                l[i].addLinkA(getNode(nodeName));
-            }
-            String nodeName1=read.getData(1,num);
-            for (int j=0;j<=(numberOfNodes-1);j++){
-                l[i].addLinkB(getNode(nodeName1));
+            for (int i=0;i<=(numberOfLinks-1);i++){
+                l[i]=new Link();
             }
 
-            num++;
+            num=1+numberOfNodes;
+
+            for (int i=0;i<=(numberOfLinks-1);i++){
+                if(read.getData(2,num)==null || read.getData(0,num)==null || read.getData(1,num)==null){
+                    graphError=true;
+                    System.out.println("problem reading links");
+                } else {
+                    weight=Integer.parseInt(read.getData(2,num));
+                    l[i].addWeight(weight);
+
+                    nodeName=read.getData(0,num);
+                    for (int j=0;j<=(numberOfNodes-1);j++){
+                        l[i].addLinkA(getNode(nodeName));
+                    }
+                    String nodeName1=read.getData(1,num);
+                    for (int j=0;j<=(numberOfNodes-1);j++){
+                        l[i].addLinkB(getNode(nodeName1));
+                    }
+                }
+
+                num++;
+            }
         }
+        
+        System.out.println("graph error is: "+hasGraphError());
 
     }
 
