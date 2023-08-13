@@ -49,6 +49,10 @@ public class graph
     public boolean hasFileError(){
         return read.hasErrorOccurred();
     }
+    
+    public void resetGraphError(){
+        graphError=false;
+    }
 
     public int getNodeNumber(){
         return numberOfNodes;

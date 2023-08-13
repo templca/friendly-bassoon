@@ -46,6 +46,7 @@ public class window extends JFrame implements ActionListener
             case "Quit": System.exit(0);
                 break;
             case "Shortest Path":
+                
                 dialogTitle="start node?";
                 InDialogBox();
                 startNode=remember;
@@ -66,6 +67,7 @@ public class window extends JFrame implements ActionListener
                 }
                 break;
             case "Import File": 
+                data.resetGraphError();
                 dialogTitle="file name?";
                 InDialogBox();
                 data.setFileName(remember);
