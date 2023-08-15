@@ -103,5 +103,7 @@ public class Queue<O>
     public Link getFront(){
         return front;
     }
+    
+    
 
 }

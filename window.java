@@ -46,7 +46,7 @@ public class window extends JFrame implements ActionListener
             case "Quit": System.exit(0);
                 break;
             case "Shortest Path":
-                
+                data.resetGraphError();
                 dialogTitle="start node?";
                 InDialogBox();
                 startNode=remember;
@@ -86,8 +86,7 @@ public class window extends JFrame implements ActionListener
                 graphImported=true;
                 repaint();
                 break;
-                
-                
+
             
         }
     }
@@ -123,19 +122,19 @@ public class window extends JFrame implements ActionListener
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
-                
+
                 g2.setFont( numberFont );
 
-                    System.out.println("weights printing");
-                g2.setColor(Color.DARK_GRAY);
+                System.out.println("weights printing");
+                g2.setColor(Color.GRAY);
                 String weightText=Integer.toString(data.getLinkWeight(j));
                 System.out.println("weight text; "+weightText);
                 float y=findCenter(startY,endY);
                 System.out.println("y; "+y);
                 float x=findCenter(startX,endX);
                 System.out.println("x; "+x);
-                g2.drawString(weightText,x+7,y+7);
-            
+                g2.drawString(weightText,x-7,y+13);
+
             }
 
             //draws nodes and gives them the names
@@ -166,7 +165,7 @@ public class window extends JFrame implements ActionListener
                 DialogBox();
             }
 
-            //draws the lines blue
+            //draws the lines grey
             for(int j=0;j<=(linkNumber-1);j++){
                 g2.setColor(Color.DARK_GRAY);
                 int startX=findNodeCoordinate(true,data.getFromLink(j,true));
@@ -178,6 +177,17 @@ public class window extends JFrame implements ActionListener
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
+
+                g2.setFont( numberFont );
+                System.out.println("weights printing againlol");
+                g2.setColor(Color.GRAY);
+                String weightText=Integer.toString(data.getLinkWeight(j));
+                System.out.println("weight text; "+weightText);
+                float y=findCenter(startY,endY);
+                System.out.println("y; "+y);
+                float x=findCenter(startX,endX);
+                System.out.println("x; "+x);
+                g2.drawString(weightText,x-7,y+13);
             }
 
             //drawing lines red
@@ -191,7 +201,7 @@ public class window extends JFrame implements ActionListener
                 int endY =findNodeCoordinate(false,data.getPFShortest(i));
                 System.out.println("end x: "+endX);
                 System.out.println("end y: "+endY);
-                
+
                 Link linkNumber=data.findLink(data.getNodeShortest(i));
                 System.out.println("link found: "+linkNumber.getName());
                 int lineWeight=linkNumber.getWeight();
@@ -200,8 +210,7 @@ public class window extends JFrame implements ActionListener
                 g2.setStroke(new BasicStroke(lineWeight));
                 Line2D lin = new Line2D.Float(startX+(circleSize/2),startY+(circleSize/2),endX+(circleSize/2),endY+(circleSize/2));
                 g2.draw(lin);
-                
-                
+
 
             }
 
@@ -223,11 +232,11 @@ public class window extends JFrame implements ActionListener
 
                 b++;
             }
-            
+
             for(int i=0;i<data.shortest.size();i++){
                 String text;
                 text=data.shortest.get(i).getName()+" comes from "+data.shortest.get(i).getPreviousName()+" with a cost of "+data.shortest.get(i).getCost();
-                
+
             }
             paintPath=false;
         }
@@ -313,7 +322,7 @@ public class window extends JFrame implements ActionListener
 
         menu = new JMenu("File");
         menuBar.add(menu);
-        
+
         menuItem=new JMenuItem("Import File");
         menuItem.addActionListener(this);
         menu.add(menuItem);
@@ -323,10 +332,9 @@ public class window extends JFrame implements ActionListener
         menu.add(menuItem);
 
         
-        
         menu = new JMenu("Play");
         menuBar.add(menu);
-        
+
         menuItem=new JMenuItem("Shortest Path");
         menuItem.addActionListener(this);
         menu.add(menuItem);

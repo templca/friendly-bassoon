@@ -39,6 +39,10 @@ public class filereader
     }
 
     public String getData(int column, int row){
+        if(AllLinesAllElements[row][column]==null){
+            errorOccured=true;
+            return null;
+        }
         return AllLinesAllElements[row][column];
     }
 

@@ -192,6 +192,9 @@ public class graph
             count++;
         }
 
+        if(read.hasErrorOccurred()){
+            graphError=true;
+        }
         if(!graphError){
 
             for (int i=0;i<=(numberOfLinks-1);i++){
@@ -201,7 +204,7 @@ public class graph
             num=1+numberOfNodes;
 
             for (int i=0;i<=(numberOfLinks-1);i++){
-                if(read.getData(2,num)==null || read.getData(0,num)==null || read.getData(1,num)==null){
+                if(read.getData(2,num)==null||getNode(read.getData(0,num))==null||getNode(read.getData(1,num))==null){
                     graphError=true;
                     System.out.println("problem reading links");
                 } else {
