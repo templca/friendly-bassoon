@@ -379,6 +379,25 @@ public class graph
             System.out.println("");
             System.out.println("num is: "+num);
 
+            
+            //this checks just in case there are nodes with no links attached
+            System.out.println("..before queue: "+nq.queueEmpty());
+            if(nq.queueEmpty() && !everythingComplete()){
+                for(int i=0;i<nodes.length;i++){
+                    System.out.println("node is: "+nodes[i].getName());
+                    if(!nodes[i].checkComplete()){
+                        System.out.println("not complete");
+                        getLinks(nodes[i].getName());
+                        System.out.println("todo size becomes: "+todo.size());
+                        if(todo.size()==0){
+                            nodes[i].isComplete();
+                            System.out.println("node: "+nodes[i].getName()+" has no links. completed.");
+                        }
+                        System.out.println("todo cleared");
+                        todo.clear();
+                    }
+                }
+            }
             if(num>0 || !nq.queueEmpty()){
                 startingNode=nq.dequeue();
                 System.out.println("startingNode is: "+startingNode.getName());
