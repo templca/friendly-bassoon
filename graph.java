@@ -49,7 +49,7 @@ public class graph
     public boolean hasFileError(){
         return read.hasErrorOccurred();
     }
-
+    
     public void resetGraphError(){
         graphError=false;
     }
@@ -80,6 +80,8 @@ public class graph
         return shortest.get(n).getPreviousName();
     }
 
+    /* returns true if there is a node with the name of the string in the 
+       'shortest' arraylist. */
     public boolean checkShortest(String n){
         for(int i=0;i<shortest.size();i++){
             if(n.equals(shortest.get(i).getName())){
@@ -89,18 +91,12 @@ public class graph
         return false;
     }
 
-    public void test(){
-        setFileName("data2.csv");
-        checkingAlgorithm("s");
-        shortestPath("s","d");
-        Link n=findLink(shortest.get(0));
-        System.out.println("link found is: "+n.getName());
-    }
-
     public int getSCost(int n){
         return shortest.get(n).getCost();
     }
 
+    /* checks beforehand if theres an error in the file reader class,
+       so if there is, then the initialise method doesn't run. */
     public void setFileName(String name){
         read.setFile(name);
         if(read.hasErrorOccurred()){
@@ -110,6 +106,8 @@ public class graph
         }
     }
 
+    /* goes through all the links and returns the link that has the right
+       nodes attached. (same node name and previous node name) */
     public Link findLink(Node n){
         System.out.println("node name is: "+n.getName());
         System.out.println("previous is is: "+n.getPreviousName());
@@ -170,97 +168,61 @@ public class graph
         graphError=false;
         resetInitialise();
         numberOfNodes=Integer.parseInt(read.getData(0,0));
-        System.out.println("number of nodes: "+numberOfNodes);
-        numberOfLinks=Integer.parseInt(read.getData(1,0));
-        System.out.println("number of links: "+numberOfLinks);
-        int x=numberOfNodes+numberOfLinks;
-        System.out.println("nodes+links: "+x);
-        System.out.println("lines: "+(read.getLines()-3));
-        if(numberOfNodes+numberOfLinks != read.getLines()-3){
+        numberOfLinks=(read.getLines()-(numberOfNodes+1));
+        l = new Link[numberOfLinks];
+        nodes = new Node[numberOfNodes];
+        int count=1;
+        for (int i=0;i<=(numberOfNodes-1);i++){
 
-            graphError=true;
-            System.out.println("error occurred");
-        } else {
-            l = new Link[numberOfLinks];
-            nodes = new Node[numberOfNodes];
-            int count=1;
-            for (int i=0;i<numberOfNodes;i++){
-
-                if(read.getData(0,count)=="end nodes"){
-                    i=numberOfNodes;
-                } else {
-                    System.out.println("0: "+read.getData(0,count));
-                    System.out.println("2: "+read.getData(2,count));
-                    System.out.println("1: "+read.getData(1,count));
-                    //if there is a gap in the file being read, then 
-                    if(read.getData(0,count)=="" || read.getData(2,count)=="" || read.getData(1,count)==""){
-                        graphError=true;
-                        System.out.println("graph error");
-                    }else {
-                        nodes[i]=new Node(read.getData(0,count));
-                        System.out.println("addincg node: "+nodes[i].getName());
-                        nodes[i].setX(Integer.parseInt(read.getData(1,count)));
-                        nodes[i].setY(Integer.parseInt(read.getData(2,count)));
-                        System.out.println("coordinates: "+nodes[i].getX()+" , "+nodes[i].getY());
-                        nodes[i].setCost(1000);
-
-                    }
-                    count++;
-                }
-            }
-
-            System.out.println(read.getData(0,count));
-            System.out.println("end nodes");
-            if(read.getData(0,count).equals("end nodes")){
-                System.out.println("nodes are correct");
-            } else {
-                System.out.println("error occurred with end nodes");
+            //if there is a gap in the file being read, then 
+            if(read.getData(0,count)==null || read.getData(2,count)==null || read.getData(1,count)==null){
                 graphError=true;
+                System.out.println("graph error");
+            }else {
+                nodes[i]=new Node(read.getData(0,count));
+                System.out.println("addincg node: "+nodes[i].getName());
+                nodes[i].setX(Integer.parseInt(read.getData(1,count)));
+                nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+                System.out.println("coordinates: "+nodes[i].getX()+" , "+nodes[i].getY());
+                nodes[i].setCost(1000);
+
             }
-
-            if(read.hasErrorOccurred()){
-                graphError=true;
-            }
-            if(!graphError){
-
-                for (int i=0;i<=(numberOfLinks-1);i++){
-                    l[i]=new Link();
-                }
-
-                num=numberOfNodes+2;
-
-                for (int i=0;i<numberOfLinks;i++){
-                    if(read.getData(2,num)==null||getNode(read.getData(0,num))==null||getNode(read.getData(1,num))==null){
-                        graphError=true;
-                        System.out.println("problem reading links");
-                    } else {
-                        weight=Integer.parseInt(read.getData(2,num));
-                        l[i].addWeight(weight);
-
-                        nodeName=read.getData(0,num);
-                        for (int j=0;j<=(numberOfNodes-1);j++){
-                            l[i].addLinkA(getNode(nodeName));
-                        }
-                        String nodeName1=read.getData(1,num);
-                        for (int j=0;j<=(numberOfNodes-1);j++){
-                            l[i].addLinkB(getNode(nodeName1));
-                        }
-                    }
-
-                    num++;
-                }
-
-                System.out.println(read.getData(0,num));
-                System.out.println("end links");
-                if(read.getData(0,num).equals("end links")){
-                    System.out.println("links are correct");
-                } else {
-                    System.out.println("error occurred with end links");
-                    graphError=true;
-                }
-            }
+            count++;
         }
 
+        if(read.hasErrorOccurred()){
+            graphError=true;
+        }
+        if(!graphError){
+
+            for (int i=0;i<=(numberOfLinks-1);i++){
+                l[i]=new Link();
+            }
+
+            num=1+numberOfNodes;
+
+            for (int i=0;i<=(numberOfLinks-1);i++){
+                if(read.getData(2,num)==null||getNode(read.getData(0,num))==null||getNode(read.getData(1,num))==null){
+                    graphError=true;
+                    System.out.println("problem reading links");
+                } else {
+                    weight=Integer.parseInt(read.getData(2,num));
+                    l[i].addWeight(weight);
+
+                    nodeName=read.getData(0,num);
+                    for (int j=0;j<=(numberOfNodes-1);j++){
+                        l[i].addLinkA(getNode(nodeName));
+                    }
+                    String nodeName1=read.getData(1,num);
+                    for (int j=0;j<=(numberOfNodes-1);j++){
+                        l[i].addLinkB(getNode(nodeName1));
+                    }
+                }
+
+                num++;
+            }
+        }
+        
         System.out.println("graph error is: "+hasGraphError());
 
     }
@@ -382,6 +344,8 @@ public class graph
         loopy=true;
     }
 
+    /*returns true if a node with the same name as the passed in string 
+    is in the nodes array*/
     public boolean checkNode(String s){
         for(int i=0;i<nodes.length;i++){
             if(s.equals(nodes[i].getName())){
@@ -391,6 +355,8 @@ public class graph
         return false;
     }
 
+    /*  checks if the inputted start node actually exists, if it does then 
+       the algorithm method runs.*/
     public void checkingAlgorithm(String start){
         if(checkNode(start)){
             algorithm(start);
@@ -415,6 +381,7 @@ public class graph
             System.out.println("");
             System.out.println("num is: "+num);
 
+            
             //this checks just in case there are nodes with no links attached
             System.out.println("..before queue: "+nq.queueEmpty());
             if(nq.queueEmpty() && !everythingComplete()){
@@ -433,6 +400,7 @@ public class graph
                     }
                 }
             }
+            // checks if node is already complete so it doesn't process it twice.
             if(num>0 || !nq.queueEmpty()){
                 startingNode=nq.dequeue();
                 System.out.println("startingNode is: "+startingNode.getName());
@@ -516,6 +484,8 @@ public class graph
         return 0;
     }
 
+    /*checks if the start and end nodes exist in the nodes array before 
+     * running the methods so there are no errors*/
     public void checkingPath(String start,String end){
         if(checkNode(start) && checkNode(end)){
             shortestPath(start, end);
@@ -525,6 +495,9 @@ public class graph
         }
     }
 
+    /* the algorithm method finds the shortest path to every node from the
+       starting one. the shortest path method takes a end string and finds the
+       shortest path from the inputted start node to the end node. */
     public void shortestPath(String start,String end){
         shortest.clear();
         boolean running=true;

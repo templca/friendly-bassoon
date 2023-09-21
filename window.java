@@ -274,6 +274,9 @@ public class window extends JFrame implements ActionListener
     }
 
     public int findNodeCoordinate(boolean X, String a){
+        /*if the boolean is true, then it is the x coordinate. 
+         * if its false then its the y coordinate
+           */
         if(X){
             for(int i=0;i<=(nodeNumber);i++){
                 if(a.equals(data.getNodeName(i))){
