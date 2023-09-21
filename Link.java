@@ -15,9 +15,7 @@ public class Link
     private int weightAdded;
     private Link follower;
     String name;
-    int runB=0;
-    
-    
+    int times;
 
     /**
      * Constructor for objects of class Link
@@ -37,12 +35,15 @@ public class Link
     }
 
     public void addLinkB(Node y){
-        if(runB==0){
+        if(times>0){
             this.y=y;
-            name=name+y.getName(); 
         } else {
             this.y=y;
+            name=name+"/"+y.getName(); 
+
         }
+        times++;
+        System.out.println("b; "+times);
     }
 
     public String getName(){
@@ -94,7 +95,7 @@ public class Link
         }
         return null;
     }
-    
+
     public Node getOtherN(String c){
         if(c.equals(getNodeA())){
             return y;
@@ -103,6 +104,5 @@ public class Link
         }
         return null;
     }
-    
-    
+
 }
