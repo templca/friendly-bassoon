@@ -67,7 +67,6 @@ public class graph
     }
 
     public String getFromShortest(int n){
-        System.out.println("from s, node: "+shortest.get(n).getName());
         return shortest.get(n).getName();
     }
 
@@ -76,7 +75,6 @@ public class graph
     }
 
     public String getPFShortest(int n){
-        System.out.println("from p, node: "+shortest.get(n).getPreviousName());
         return shortest.get(n).getPreviousName();
     }
 
@@ -100,7 +98,7 @@ public class graph
     public void setFileName(String name){
         read.setFile(name);
         if(read.hasErrorOccurred()){
-            System.out.println("error has occured in file");
+            System.out.println("Error Occurred: Problem with file.");
         } else {
             initialise();
         }
@@ -109,22 +107,16 @@ public class graph
     /* goes through all the links and returns the link that has the right
     nodes attached. (same node name and previous node name) */
     public Link findLink(Node n){
-        System.out.println("node name is: "+n.getName());
-        System.out.println("previous is is: "+n.getPreviousName());
         for(int i=0;i<l.length;i++){
             if(n.getName().equals(l[i].getNodeA()) || n.getName().equals(l[i].getNodeB())){
-                System.out.println("node matches.");
-                System.out.println("node  A is: "+l[i].getNodeA());
-                System.out.println("node  B is: "+l[i].getNodeB());
                 if(n.getPreviousName().equals(l[i].getNodeA()) || n.getPreviousName().equals(l[i].getNodeB())){
-                    System.out.println("node  A is: "+l[i].getNodeA());
-                    System.out.println("node  B is: "+l[i].getNodeB());
-                    System.out.println("previous matches");
+
                     return l[i];
                 }
             }
-            System.out.println("not a match");
+
         }
+        System.out.println("No matches found.");
         return null;
     }
 
@@ -167,66 +159,93 @@ public class graph
 
         graphError=false;
         resetInitialise();
-
-        System.out.println("Reading from graph..");
-
         numberOfNodes=Integer.parseInt(read.getData(0,0));
-        System.out.println("Number of nodes: "+numberOfNodes);
+        System.out.println("Number of Nodes: "+numberOfNodes);
+        numberOfLinks=Integer.parseInt(read.getData(1,0));
+        System.out.println("Number of Links: "+numberOfLinks);
+        int x=numberOfNodes+numberOfLinks;
+        if(numberOfNodes+numberOfLinks != read.getLines()-3){
 
-        numberOfLinks=(read.getLines()-(numberOfNodes+1));
-        System.out.println("Number of links: "+numberOfLinks);
-
-        l = new Link[numberOfLinks];
-        nodes = new Node[numberOfNodes];
-        int count=1;
-        for (int i=0;i<=(numberOfNodes-1);i++){
-
-            //if there is a gap in the file being read, then 
-            if(read.getData(0,count)==null || read.getData(2,count)==null || read.getData(1,count)==null){
-                graphError=true;
-                System.out.println("Error: There is a gap in file. (node)");
-            }else {
-                nodes[i]=new Node(read.getData(0,count));
-                nodes[i].setX(Integer.parseInt(read.getData(1,count)));
-                nodes[i].setY(Integer.parseInt(read.getData(2,count)));
-                nodes[i].setCost(1000);
-
-            }
-            count++;
-        }
-
-        if(read.hasErrorOccurred()){
             graphError=true;
-            System.out.println("Error in file.");
-        }
-        if(!graphError){
+            System.out.println("Error occurred: Nodes/Links do not match.");
+        } else {
+            l = new Link[numberOfLinks];
+            nodes = new Node[numberOfNodes];
+            int count=1;
+            for (int i=0;i<numberOfNodes;i++){
 
-            for (int i=0;i<=(numberOfLinks-1);i++){
-                l[i]=new Link();
+                if(read.getData(0,count)=="end nodes"){
+                    i=numberOfNodes;
+                } else {
+                    //if there is a gap in the file being read, then 
+                    if(read.getData(0,count)=="" || read.getData(2,count)=="" || read.getData(1,count)==""){
+                        graphError=true;
+                        System.out.println("Error occurred: Gap in nodes.");
+                    }else {
+                        nodes[i]=new Node(read.getData(0,count));
+                        System.out.println("Adding Node: "+nodes[i].getName());
+                        nodes[i].setX(Integer.parseInt(read.getData(1,count)));
+                        nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+                        nodes[i].setCost(1000);
+
+                    }
+                    count++;
+                }
+            }
+            System.out.println("");
+
+            System.out.println(read.getData(0,count));
+            if(read.getData(0,count).equals("end nodes")){
+                System.out.println("Nodes are correct!");
+            } else {
+                System.out.println("Error occurred: Node number incorrect.");
+                graphError=true;
             }
 
-            num=1+numberOfNodes;
+            if(read.hasErrorOccurred()){
+                graphError=true;
+            }
+            if(!graphError){
 
-            for (int i=0;i<numberOfLinks;i++){
-                if(read.getData(2,num)==null||getNode(read.getData(0,num))==null||getNode(read.getData(1,num))==null){
-                    graphError=true;
-                    System.out.println("Error: There is a gap in the file. (link)");
-                } else {
-                    weight=Integer.parseInt(read.getData(2,num));
-                    l[i].addWeight(weight);
-
-                    nodeName=read.getData(0,num);
-                    System.out.println("node name is: "+nodeName);
-                    l[i].addLinkA(getNode(nodeName));
-                    String nodeName1=read.getData(1,num);
-                    System.out.println("node name1 is: "+nodeName1);
-                    l[i].addLinkB(getNode(nodeName1));
+                for (int i=0;i<=(numberOfLinks-1);i++){
+                    l[i]=new Link();
                 }
 
-                num++;
+                num=numberOfNodes+2;
+
+                for (int i=0;i<numberOfLinks;i++){
+                    if(read.getData(2,num)==null||getNode(read.getData(0,num))==null||getNode(read.getData(1,num))==null){
+                        graphError=true;
+                        System.out.println("Error occurred: Gap in Links.");
+                    } else {
+                        weight=Integer.parseInt(read.getData(2,num));
+                        l[i].addWeight(weight);
+
+                        nodeName=read.getData(0,num);
+                        l[i].addLinkA(getNode(nodeName));
+
+                        String nodeName1=read.getData(1,num);
+                        l[i].addLinkB(getNode(nodeName1));
+                    }
+
+                    num++;
+                }
+
+                System.out.println(read.getData(0,num));
+                if(read.getData(0,num).equals("end links")){
+                    System.out.println("Links are correct!");
+                } else {
+                    System.out.println("Error occurred: Link number incorrect.");
+                    graphError=true;
+                }
             }
         }
+        System.out.println("");
 
+        if(hasGraphError()){
+            System.out.println("Error Occurred: Problem with graph");
+        }
+        System.out.println("");
     }
 
     /*this method takes a string and returns the node with the name of that string*/
@@ -257,7 +276,6 @@ public class graph
                 a=a.getFollower();
             }
         }
-        System.out.println("node not found in queue.");
         return false;
     }
 
@@ -278,22 +296,18 @@ public class graph
      * to an arraylist */
     public void getLinks(String n){
         if(n==null){
-            System.out.println("Error: No links with that name.");
+            System.out.println("Error Occurred: Links are null.");
             return;
         }
         if(l.length!=numberOfLinks){
-            System.out.println("Link number doesn't match.");
+            System.out.println("Error Occurred: Link number doesn't match.");
         }
         for(int i=0;i<=(numberOfLinks-1);i++){
             if(n.equals(l[i].getNodeA())||n.equals(l[i].getNodeB())){
                 if(todo.size()>0 && !checkLink(todo,l[i].getName())){
-                    System.out.println("(get) adding: "+l[i].getName());
                     todo.add(l[i]);
                 }else if(todo.size()==0){
-                    System.out.println("(get) adding: "+l[i].getName());
                     todo.add(l[i]);
-                } else {
-                    System.out.println("(get) already added: "+l[i].getName());
                 }
 
             }
@@ -325,7 +339,6 @@ public class graph
             } 
         }
         if(counter==0){
-            System.out.println("Everything is complete!");
             return true;
         }
         return false;
@@ -361,7 +374,7 @@ public class graph
         if(checkNode(start)){
             algorithm(start);
         } else{
-            System.out.println("Error: That node doesn't exist!");
+            System.out.println("Error Occurred: Node not found.");
             graphError=true;
         }
     }
@@ -374,83 +387,79 @@ public class graph
         startingNode.setCost(0);
         startingNode.addPrevious(startingNode);
 
-        System.out.println("Starting with: "+startingNode.getName());
-
         while(loopy){
-            System.out.println("");
-
             //this checks just in case there are nodes with no links attached
+            System.out.println("Checking for Nodes with no links.");
             if(nq.queueEmpty() && !everythingComplete()){
                 for(int i=0;i<nodes.length;i++){
-                    System.out.print(nodes[i].getName());
+                    System.out.print(nodes[i].getName()+" is ");
                     if(!nodes[i].checkComplete()){
-                        System.out.println(" is not complete");
+                        System.out.println(" not complete");
                         getLinks(nodes[i].getName());
                         if(todo.size()==0){
                             nodes[i].isComplete();
-                            System.out.println(" has no links. completed.");
+                            System.out.println(nodes[i].getName()+" has no links. Completed.");
                         }
                         todo.clear();
                     }
                 }
+            }
+
+            if(nq.queueEmpty()){
+                System.out.println("Queue Empty. Continuing.");
             }
             // checks if node is already complete so it doesn't process it twice.
             if(num>0 || !nq.queueEmpty()){
                 startingNode=nq.dequeue();
                 while(startingNode.checkComplete() && !nq.queueEmpty()){
                     startingNode=startingNode.getFollower();
+                    System.out.println(startingNode.getName()+": Completed.");
                 }
             }
-            System.out.println("Node to be processed: "+startingNode.getName());
-
+            System.out.println("Now starting with: "+startingNode.getName());
+            System.out.println("");
             getLinks(startingNode.getName());
 
             /*adds the previous node to all the nodes connected to the 'starting' node
             and also adds the weight! and enqueues if it hasn't been processed before*/
             for(int i=0;i<todo.size();i++){
                 int currentCost=startingNode.getCost();
-                System.out.println("current cost: "+currentCost);
+                System.out.print("Current cost to "+startingNode.getName());
+                System.out.println(" is: "+currentCost);
 
-                System.out.println("node a: "+todo.get(i).getNodeA());
-                System.out.println("node b: "+todo.get(i).getNodeB());
                 int nextCost=currentCost+todo.get(i).getWeight();
-                System.out.println("next cost is: "+nextCost);
 
                 Node otherNode=todo.get(i).getOtherN(startingNode.getName());
-                System.out.println("other node: "+otherNode.getName());
                 int otherCost=otherNode.getCost();
-                System.out.println("other cost: "+otherCost);
+
+                System.out.print("Cost to "+otherNode.getName()+" from "+startingNode.getName());
+                System.out.println(" is: "+nextCost);
+                System.out.println("Current cost to "+otherNode.getName()+" is: "+otherCost);
 
                 if(nextCost<otherCost){
                     if(checknQueue(otherNode)){
+                        System.out.println("Node already in queue. Removing..");
                         nq.remove(otherNode);
-                        System.out.println("removing..: "+otherNode.getName()+" cost; "+otherNode.getCost());
                     }
                     otherNode.setCost(nextCost);
-                    System.out.println("new other cost: "+otherNode.getCost());
                     otherNode.addPrevious(startingNode);
-                    System.out.println("adding previous ("+otherNode.getPreviousName()+") to "+otherNode.getName());
-                    System.out.println("enqueueing: "+otherNode.getName());
-                    printQueue();
+                    System.out.print("New shortest path to: "+otherNode.getName()+" is from "+startingNode.getName());
+                    System.out.println(" with a cost of: "+otherNode.getCost());
                     nq.doEnqueue(otherNode);
-                    System.out.println("---");
-                    printQueue();
                 } else if (nextCost==otherCost){
-                    System.out.println("path is the same length.");
+                    System.out.println("Path is the same length.");
                 } else {
-                    System.out.println("already added.");
+                    System.out.println("Shortest path already found.");
                 }
+                System.out.println("");
             }
-            System.out.println(startingNode.getName()+" is now complete");
+            System.out.println(startingNode.getName()+" is now processed.");
             startingNode.isComplete();
             doneN.add(startingNode);
             todo.clear();
-
-            for(int i=0;i<doneN.size();i++){
-                System.out.print("---shortest path to: "+doneN.get(i).getName());
-                System.out.println(" is from: "+doneN.get(i).getPreviousName());
-            }
-
+            System.out.println("Everything complete? "+everythingComplete());
+            System.out.println("");
+            System.out.println("");
             num++;
 
             if(everythingComplete()){
@@ -458,21 +467,15 @@ public class graph
             }
 
         }
-        for(int i=0;i<doneN.size();i++){
-            System.out.print("shortest path to "+doneN.get(i).getName());
-            System.out.print(" is from "+doneN.get(i).getPreviousName());
-            System.out.println(" with cost: "+doneN.get(i).getCost());
-        }
     }
 
     public int findNodesDone(Node s){
         for(int i=0;i<doneN.size();i++){
             if(s==doneN.get(i)){
-                System.out.println(i+" number in array");
                 return i;
             }
         }
-        System.out.println("no node found.");
+        System.out.println("Error Occurred: no node found.");
         return 0;
     }
 
@@ -482,7 +485,7 @@ public class graph
         if(checkNode(start) && checkNode(end)){
             shortestPath(start, end);
         } else{
-            System.out.println("node entered does not match");
+            System.out.println("Error Occurred: node entered does not match.");
             graphError=true;
         }
     }
@@ -495,22 +498,21 @@ public class graph
         boolean running=true;
         shortest.add(doneN.get((findNodesDone(getNode(end)))));
         Node endNode=shortest.get(0);
-        System.out.println("adding: "+endNode.getName());
         while(running){
             shortest.add(endNode.getPrevious());
-            System.out.println(".adding: "+endNode.getName());
             endNode=endNode.getPrevious();
-            System.out.println("new end: "+endNode.getName());
 
             if(endNode==getNode(start)){
-                System.out.println("---");
                 running=false;
             }
 
         }
-
+        int n=shortest.size()-1;
         for(int i=0;i<shortest.size();i++){
-            System.out.println("END: "+shortest.get(i).getName());
+            System.out.print("Shortest path to "+shortest.get(n).getName());
+            System.out.print(" is from "+shortest.get(n).getPreviousName());
+            System.out.println(" with cost: "+shortest.get(n).getCost());
+            n=n-1;
         }
 
     }

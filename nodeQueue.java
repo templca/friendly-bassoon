@@ -132,71 +132,12 @@ public class nodeQueue<O>
     public void remove(Node removee){
         if(removee==front){
             dequeue();
-            System.out.println("dequeueing: "+removee.getName());
         }else if (removee==end || removee.getFollower()==null){
-            System.out.println("removee is at the end of queue,");
             findInFront(removee).addFollower(null);
         } else {
-            System.out.println("in frontof : "+findInFront(removee).getName()+" adding follower: "+removee.getFollowerName());
+
             findInFront(removee).addFollower(removee.getFollower());
         }
-
-    }
-
-    public void removeAll(String n){
-        int count=len()+1;
-        System.out.println("count is : "+count);
-        Node r=front;
-        for(int i=0;i<=count;i++){
-            System.out.println("r name is: "+r.getName()+r.getCost());
-            if(n.equals(r.getName())){
-                System.out.println("--removing: "+r.getName()+r.getCost());
-                remove(r);
-                r=front;
-            }
-            else {  
-                if(r.getFollower()==null){
-                    System.out.println("nullr is: "+r.getName()+r.getCost());
-
-                } else{
-                    r=r.getFollower();
-                    System.out.println("r is now "+r.getName()+r.getCost()); }
-                System.out.println("//i is: "+i);
-            }
-        }
-    }
-
-    public void testqueue(){
-        Node A = new Node("a");
-        A.setCost(3);
-        Node B = new Node("b");
-        B.setCost(5);
-        Node C = new Node("c");
-        C.setCost(6);
-        Node D = new Node("a");
-        D.setCost(8);
-        Node E = new Node("b");
-        E.setCost(9);
-        Node F = new Node("c");
-        F.setCost(11);
-        Node G = new Node("a");
-        G.setCost(15);
-
-        A.addPrevious(B);
-        B.addPrevious(A);
-        C.addPrevious(D);
-        D.addPrevious(C);
-
-        doEnqueue(A);
-        doEnqueue(B);
-        doEnqueue(C);
-        doEnqueue(D);
-        doEnqueue(E);
-        doEnqueue(F);
-        doEnqueue(G);
-
-        removeAll("a");
-        System.out.println(len());
 
     }
 

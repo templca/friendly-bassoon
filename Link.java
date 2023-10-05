@@ -43,7 +43,6 @@ public class Link
 
         }
         times++;
-        System.out.println("b; "+times);
     }
 
     public String getName(){
