@@ -10,15 +10,15 @@ public class Node
 {
     // instance variables - replace the example below with your own
     private String name;
-    private int x;
-    private int y;
+    private int x; //x coordinate.
+    private int y; //y coordinate.
     
-    private int cost;
-    private Node previousNode;
+    private int cost; //cost to get to this node from previous node.
+    private Node previousNode; //the other side of the link
     
-    private Node follower;
+    private Node follower; //when it is in a queue, it'll store what is behind it.
     
-    private boolean complete=false;
+    private boolean complete=false; //whether this node has been processed.
 
 
     /**

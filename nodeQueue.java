@@ -22,21 +22,6 @@ public class nodeQueue<O>
         this.end=null;
     }
 
-    /*
-     * Make a new Node with the Item in it.
-     * Add it to the end of the queue
-     */
-
-    /*void enqueue(O item){
-    Node box = new Node(item); // Wrap our item up in a box to put in the queue
-    doEnqueue(box);
-    }  enqueue
-
-    void enqueue (O item, int pri){
-    Node box = new Node(item,pri);
-    doEnqueue(box); }
-     */
-
     void doEnqueue(Node box){
         // first check special cases where this.front needs updating.
         if (this.front == null) { // empty queue

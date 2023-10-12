@@ -4,7 +4,7 @@
  * 
  * 18/05
  * 
- * netowork
+ * graph class. Does the algorithm.
  */
 
 import java.util.Scanner;
@@ -12,25 +12,46 @@ import java.util.ArrayList;
 public class graph
 {
     // instance variables - replace the example below with your own
+    
+    //a priority queue of nodes-
     nodeQueue nq;
+    
+    //array that stores all the links.
     Link[] l;
+    
+    //array that stores nodes.
     Node[] nodes;
+    
+    //reads the file.
     filereader read = new filereader();
+
     int numberOfNodes;
     int numberOfLinks;
+    
+    //holds the weight number.
     int weight;
+    
+    //a counter that starts at 1 not 0.
     int num=1;
-    String nodeName;
-    boolean loopy=true;
-    Link dummy;
-    int baseWeight;
     int counter;
-    String next;
+    
+    //stores the name of the node.
+    String nodeName;
+    
+    //the while loop for the algorithm. is true until all nodes have been processed.
+    boolean loopy=true;
+    
+    
+    //an arraylist that holds that nodes that need to be processed.
     ArrayList<Link> todo = new ArrayList<Link>();
+    
+    //an arraylist that holds the nodes which are the shortest path.
     ArrayList<Node> shortest = new ArrayList<Node>();
 
+    //holds the nodes which have been processed.
     ArrayList<Node> doneN = new ArrayList<Node>();
 
+    //becomes true whenever there is an error (like a gap in the file.)
     boolean graphError=false;
 
     /**
@@ -184,8 +205,13 @@ public class graph
                     }else {
                         nodes[i]=new Node(read.getData(0,count));
                         System.out.println("Adding Node: "+nodes[i].getName());
-                        nodes[i].setX(Integer.parseInt(read.getData(1,count)));
-                        nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+                        try{
+                            nodes[i].setX(Integer.parseInt(read.getData(1,count)));
+                            nodes[i].setY(Integer.parseInt(read.getData(2,count)));
+                        } catch(Exception e) {
+                            graphError=true;
+                            System.out.println("Error occurred: Coordinates are not integers.");
+                        }
                         nodes[i].setCost(1000);
 
                     }
@@ -218,7 +244,12 @@ public class graph
                         graphError=true;
                         System.out.println("Error occurred: Gap in Links.");
                     } else {
-                        weight=Integer.parseInt(read.getData(2,num));
+                        try{
+                            weight=Integer.parseInt(read.getData(2,num));
+                        } catch(Exception e){
+                            graphError=true;
+                            System.out.println("Error occurred: Weight is not an integer.");
+                        }
                         l[i].addWeight(weight);
 
                         nodeName=read.getData(0,num);
@@ -382,7 +413,6 @@ public class graph
     public void algorithm(String starting){
         resetNodes();
         int num=0;
-        baseWeight=0;
         Node startingNode=getNode(starting);
         startingNode.setCost(0);
         startingNode.addPrevious(startingNode);

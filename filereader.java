@@ -4,8 +4,10 @@
  * 
  * 6/06
  * 
- * this calss reads a afile
- */
+ * this class reads a csv file.
+ * it splits the text where the commas are and puts it into an array
+ * 
+   */
 
 import java.util.Scanner;
 import java.io.IOException;

@@ -17,27 +17,44 @@ import javax.swing.JButton;
 public class window extends JFrame implements ActionListener
 {
     // instance variables - replace the example below with your own
-    private int x=-1000;
-    private String windowName;
-    private int y=100;
+    //menu stuff.
     JMenuBar menuBar;
     JMenu menu;
     JMenuItem menuItem;
     JButton myButton;
     TextArea area;
+    private String windowName;
+    
+    //number of links/nodes..
     private int nodeNumber=0;
     private int linkNumber=0;
+    
+    //stores the coordinates for lines.
     int x1;
     int y1;
+    private int y=100;
+    private int x=-1000;
+    
+    //size of text.
     int fontSize=25;
+    
+    //tells when to paint the graphics.
     boolean paintPath=false;
     boolean graphImported=false;
+    
+    //where the text input from dialogue box gets stored.
     String remember;
-    String dialogTitle;
+    
+    //stores the start and end nodes for the algorithm.
     String startNode;
     String endNode;
+    
+    //start of the error mesage.
     String errorMessage="Error: ";
+    
+    //any text for in the dialogue box.
     String dialogText;
+    String dialogTitle;
 
     graph data=new graph();
     public void actionPerformed(ActionEvent e) {

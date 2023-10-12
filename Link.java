@@ -9,11 +9,9 @@
 public class Link
 {
     // instance variables - replace the example below with your own
-    private Node x;
-    private Node y;
-    private int weight;
-    private int weightAdded;
-    private Link follower;
+    private Node x; //one side of the link
+    private Node y; //what it links to.
+    private int weight; //the cost of this link.
     String name;
     int times;
 
@@ -53,29 +51,13 @@ public class Link
         this.weight=weight;
     }
 
-    public void addOnWeight(int on){
-        weightAdded=on;
-    }
-
     public int getWeight(){
-        return weight+weightAdded;
+        return weight;
     }
 
     public String showLink(){
         System.out.println(x.getName()+" links to "+y.getName()+". weight: "+weight);
         return x+"links to"+y;
-    }
-
-    public void addFollower(Link follower){
-        this.follower=follower;
-    }
-
-    public String getFollowerName(){
-        return this.follower.getName();
-    }
-
-    public Link getFollower(){
-        return this.follower;
     }
 
     public String getNodeA(){
